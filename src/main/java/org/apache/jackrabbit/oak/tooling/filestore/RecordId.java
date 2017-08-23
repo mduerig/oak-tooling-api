@@ -26,9 +26,6 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-/**
- * michid document
- */
 public class RecordId {
     @Nonnull
     private final UUID segmentId;

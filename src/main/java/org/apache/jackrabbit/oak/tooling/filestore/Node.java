@@ -23,9 +23,6 @@ import static org.apache.jackrabbit.oak.tooling.filestore.Property.NULL_PROPERTY
 
 import javax.annotation.Nonnull;
 
-/**
- * michid document
- */
 public interface Node {
     Node NULL_NODE = new Node() {
         @Nonnull

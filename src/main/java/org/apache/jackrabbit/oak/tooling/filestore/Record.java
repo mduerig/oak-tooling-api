@@ -20,11 +20,6 @@ package org.apache.jackrabbit.oak.tooling.filestore;
 
 import javax.annotation.Nonnull;
 
-/**
- * michid document
- id
- type
- */
 public interface Record {
     // TODO add and implement other record types
     enum Type { NODE }

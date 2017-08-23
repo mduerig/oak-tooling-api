@@ -18,9 +18,6 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
-/**
- * michid document
- */
 public interface Property {
     Property NULL_PROPERTY = new Property() {};
 
