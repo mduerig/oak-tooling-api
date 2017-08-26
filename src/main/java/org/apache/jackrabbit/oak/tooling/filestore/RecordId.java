@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RecordId {
     @Nonnull
@@ -47,7 +48,7 @@ public class RecordId {
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(@Nullable  Object other) {
         if (this == other) {
             return true;
         }
