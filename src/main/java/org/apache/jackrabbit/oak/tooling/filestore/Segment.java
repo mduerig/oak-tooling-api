@@ -18,6 +18,7 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
+import java.io.InputStream;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -31,9 +32,8 @@ public interface Segment {
     @Nonnull
     Iterable<Record> records();
 
-    /** TODO: add arguments for specifying dump format (bin, hex, head) */
     @Nonnull
-    String dump();
+    Dump dump();
 
     int size();
 
@@ -42,4 +42,15 @@ public interface Segment {
 
     @Nonnull
     Type type();
+
+    interface Dump {
+        @Nonnull
+        String header();
+
+        @Nonnull
+        String hex(boolean includeHeader);
+
+        @Nonnull
+        InputStream bytes();
+    }
 }
