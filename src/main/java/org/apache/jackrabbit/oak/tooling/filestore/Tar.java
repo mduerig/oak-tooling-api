@@ -26,9 +26,9 @@ public interface Tar {
     @Nonnull
     String name();
 
-    long timestamp();
-
     long size();
+
+    long timestamp();
 
     /** Segment ids in reverse chronological order */
     @Nonnull

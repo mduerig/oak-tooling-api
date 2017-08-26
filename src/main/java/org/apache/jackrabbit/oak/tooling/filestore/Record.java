@@ -18,15 +18,21 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
+import java.nio.ByteBuffer;
+
 import javax.annotation.Nonnull;
 
 public interface Record {
-    // TODO add and implement other record types
-    enum Type { NODE }
+    enum Type {LEAF, BRANCH, BUCKET, LIST, VALUE, BLOCK, TEMPLATE, NODE, BLOB_ID}
 
     @Nonnull
     RecordId id();
 
     @Nonnull
     Type type();
+
+    int offset();
+
+    @Nonnull
+    ByteBuffer read(int offset, int count);
 }

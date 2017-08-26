@@ -24,16 +24,16 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 public interface Store {
-    /** Journal entries in reverse chronological order */
-    @Nonnull
-    Iterable<JournalEntry> journal();
-
     /** Tar files in reverse chronlogical order */
     @Nonnull
     Iterable<Tar> tars();
 
     @CheckForNull
     Segment segment(@Nonnull UUID id);
+
+    /** Journal entries in reverse chronological order */
+    @Nonnull
+    Iterable<JournalEntry> journal();
 
     @CheckForNull
     Node node(@Nonnull RecordId id);

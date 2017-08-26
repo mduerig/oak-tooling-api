@@ -138,6 +138,12 @@ public interface Property {
     Property NULL_PROPERTY = new Property() {
         @Nonnull
         @Override
+        public String getName() {
+            return "";
+        }
+
+        @Nonnull
+        @Override
         public Type type() {
             return Type.VOID;
         }
@@ -159,6 +165,9 @@ public interface Property {
             return emptyList();
         }
     };
+
+    @Nonnull
+    String getName();
 
     @Nonnull
     Type type();

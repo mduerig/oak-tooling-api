@@ -18,7 +18,7 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
-import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -27,30 +27,25 @@ public interface Segment {
     enum Type {DATA, BULK}
 
     @Nonnull
+    UUID id();
+
+    int size();
+
+    @Nonnull
+    Type type();
+
+    @Nonnull
     Iterable<UUID> references();
 
     @Nonnull
     Iterable<Record> records();
 
     @Nonnull
-    Dump dump();
-
-    int size();
+    ByteBuffer read(int offset, int count);
 
     @Nonnull
-    UUID id();
+    String header();
 
     @Nonnull
-    Type type();
-
-    interface Dump {
-        @Nonnull
-        String header();
-
-        @Nonnull
-        String hex(boolean includeHeader);
-
-        @Nonnull
-        InputStream bytes();
-    }
+    String hexDump(boolean includeHeader);
 }

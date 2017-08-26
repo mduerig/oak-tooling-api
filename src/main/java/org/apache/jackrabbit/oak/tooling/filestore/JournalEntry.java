@@ -21,8 +21,8 @@ package org.apache.jackrabbit.oak.tooling.filestore;
 import javax.annotation.Nonnull;
 
 public interface JournalEntry {
-    long timestamp();
-
     @Nonnull
     RecordId id();
+
+    long timestamp();
 }
