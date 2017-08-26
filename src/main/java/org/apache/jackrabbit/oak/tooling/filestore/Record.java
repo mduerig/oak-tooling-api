@@ -18,9 +18,15 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
+import static java.util.Objects.hash;
+
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * An instance of this class represents a record in segment
@@ -31,7 +37,7 @@ public interface Record {
     /**
      * The type of a record in a segment.
      */
-    enum Type {
+    final class Type<T> {
 
         /**
          * A leaf of a map (which is a HAMT tree). This contains
@@ -41,7 +47,10 @@ public interface Record {
          * the key and the record id of the value</li>
          * </ul>
          */
-        LEAF,
+        @Nonnull
+        public static final Type<LeafRecord> LEAF =
+                new Type<>(LeafRecord.class, "TEMPLATE");
+
 
         /**
          * A branch of a map (which is a HAMT tree). This contains
@@ -64,7 +73,9 @@ public interface Record {
          * </ul>
          * There is only ever one single diff record for a map.
          */
-        BRANCH,
+        @Nonnull
+        public static final Type<BranchRecord> BRANCH =
+                new Type<>(BranchRecord.class, "TEMPLATE");
 
         /**
          * A bucket (a list of references). It always includes at least 2 elements,
@@ -73,7 +84,9 @@ public interface Record {
          * This contains just the record ids. The size of the list is not stored, as
          * it is stored along with the reference to this record.
          */
-        BUCKET,
+        @Nonnull
+        public static final Type<BucketRecord> BUCKET =
+                new Type<>(BucketRecord.class, "TEMPLATE");
 
         /**
          * A list including the size (an int). This could be 0, in which case there
@@ -83,7 +96,9 @@ public interface Record {
          * entries in the list, then the list is partitioned into sub-lists of 255
          * entries each, which are stored kind of recursively.
          */
-        LIST,
+        @Nonnull
+        public static final Type<ListRecord> LIST =
+                new Type<>(ListRecord.class, "TEMPLATE");
 
         /**
          * A value (for example a string, or a long, or a blob). The format is:
@@ -94,13 +109,17 @@ public interface Record {
          * <p>
          * Therefore, a value can reference other records.
          */
-        VALUE,
+        @Nonnull
+        public static final Type<ValueRecord> VALUE =
+                new Type<>(ValueRecord.class, "TEMPLATE");
 
         /**
          * A block of bytes (a binary value, or a part of a binary value, or part of
          * large strings). It only contains the raw data.
          */
-        BLOCK,
+        @Nonnull
+        public static final Type<BlockRecord> BLOCK =
+                new Type<>(BlockRecord.class, "TEMPLATE");
 
         /**
          * A template (the "hidden class" of a node; inspired by the Chrome V8
@@ -120,7 +139,9 @@ public interface Record {
          * values for multi-value properties).</li>
          * </ul>
          */
-        TEMPLATE,
+        @Nonnull
+        public static final Type<TemplateRecord> TEMPLATE =
+                new Type<>(TemplateRecord.class, "TEMPLATE");
 
         /**
          * A JCR node, which contains a list of record ids:
@@ -133,12 +154,67 @@ public interface Record {
          * pointer to the list record)</li>
          * </ul>
          */
-        NODE,
+        @Nonnull
+        public static final Type<NodeRecord> NODE =
+                new Type<>(NodeRecord.class, "NODE");
 
         /**
          * A reference to an external binary object.
          */
-        BLOB_ID,
+        @Nonnull
+        public static final Type<BlobIdRecord> BLOB_ID =
+                new Type<>(BlobIdRecord.class, "TEMPLATE");
+
+        @Nonnull
+        public static final Map<String, Type<?>> ALL = new HashMap<>();
+
+        @Nonnull
+        private final Class<T> type;
+
+        @Nonnull
+        private final String name;
+
+        private Type(@Nonnull Class<T> type, @Nonnull String name) {
+            this.type = type;
+            this.name = name;
+            ALL.put(name, this);
+        }
+
+        @Nonnull
+        public Class<T> getType() {
+            return type;
+        }
+
+        @Nonnull
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (other == null || getClass() != other.getClass()) {
+                return false;
+            }
+            Type<?> that = (Type<?>) other;
+            return Objects.equals(type, that.type) &&
+                    Objects.equals(name, that.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash(type, name);
+        }
+
+        @Override
+        public String toString() {
+            return "Record.Type{" +
+                    "type=" + type +
+                    ", name='" + name + '\'' +
+                    '}';
+        }
     }
 
     /**
