@@ -37,4 +37,7 @@ public interface Store {
 
     @CheckForNull
     Node node(@Nonnull RecordId id);
+
+    @CheckForNull
+    <T> T cast(Object value, Class<T> classType);
 }
