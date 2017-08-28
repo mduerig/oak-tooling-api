@@ -23,29 +23,78 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+/**
+ * An instance of this interface represents a segment of the
+ * segment store.
+ */
 public interface Segment {
-    enum Type {DATA, BULK}
 
+    /**
+     * Type of the segment.
+     */
+    enum Type {
+
+        /** A data segment */
+        DATA,
+
+        /** A bulk segment */
+        BULK
+    }
+
+    /**
+     * @return  the id of this segment
+     */
     @Nonnull
     UUID id();
 
+    /**
+     * @return  the size of this segment in bytes.
+     */
     int size();
 
+    /**
+     * @return  the type of this segment
+     */
     @Nonnull
     Type type();
 
+    /**
+     * @return  the ids of the segments referenced by this segment
+     */
     @Nonnull
     Iterable<UUID> references();
 
+    /**
+     * @return  the records contained in this segment
+     */
     @Nonnull
     Iterable<Record> records();
 
+    /**
+     * Read a number of bytes from this segment.
+     * @param offset  offset from the beginning of this segment
+     * @param count   number of bytes to read from this segment
+     * @return  a buffer containing {@code count} bytes from this segment
+     * starting at {@code offset}.
+     * @throws IllegalArgumentException if {@code count} or {@code offset} is negative.
+     * @throws IllegalStateException if either {@code offset + count >= size()}
+     */
     @Nonnull
     ByteBuffer read(int offset, int count);
 
+    /**
+     * @return  a human readable string representation of this segment's
+     * header or the empty string for bulk segments.
+     */
     @Nonnull
     String header();
 
+    /**
+     * Create an human readable hex dump of this segment.
+     * @param includeHeader  Include the header in the hex dump if {@code true}. Otherwise
+     *                       exclude the header.
+     * @return  a hex dump
+     */
     @Nonnull
     String hexDump(boolean includeHeader);
 }

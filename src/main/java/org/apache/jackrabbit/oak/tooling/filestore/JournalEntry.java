@@ -20,9 +20,20 @@ package org.apache.jackrabbit.oak.tooling.filestore;
 
 import javax.annotation.Nonnull;
 
+/**
+ * An instance of this interface represents an entry in the
+ * segments store's {@code journal.log} file.
+ */
 public interface JournalEntry {
+
+    /**
+     * @return  the record id of this journal entry
+     */
     @Nonnull
     RecordId id();
 
+    /**
+     * @return  the time stamp of this entry
+     */
     long timestamp();
 }

@@ -23,26 +23,46 @@ import static org.apache.jackrabbit.oak.tooling.filestore.Property.NULL_PROPERTY
 
 import javax.annotation.Nonnull;
 
+/**
+ * An instance of this interface represents a node of a  segment store.
+ */
 public interface Node {
+
+    /**
+     * Singleton instance to represent non existing nodes.
+     */
     Node NULL_NODE = new Node() {
+
+        /**
+         * @return  always empty.
+         */
         @Nonnull
         @Override
         public Iterable<Node> getNodes() {
             return emptyList();
         }
 
+        /**
+         * @return  {@link #NULL_NODE}
+         */
         @Nonnull
         @Override
         public Node node(@Nonnull String name) {
             return NULL_NODE;
         }
 
+        /**
+         * @return  always empty.
+         */
         @Nonnull
         @Override
         public Iterable<Property> properties() {
             return emptyList();
         }
 
+        /**
+         * @return  {@link Property#NULL_PROPERTY}
+         */
         @Nonnull
         @Override
         public Property property(@Nonnull String name) {
@@ -50,15 +70,33 @@ public interface Node {
         }
     };
 
+    /**
+     * @return  the child nodes of this node. The order is not specified.
+     */
     @Nonnull
     Iterable<Node> getNodes();
 
+    /**
+     * Look up a child node of the given {@code name}.
+     * @param name  name of the child node to look up.
+     * @return  a child node or {@link #NULL_NODE} if no
+     * such node exists.
+     */
     @Nonnull
     Node node(@Nonnull String name);
 
+    /**
+     * @return  the properties of this node. The order is not specified.
+     */
     @Nonnull
     Iterable<Property> properties();
 
+    /**
+     * Look up a property of the given {@code name}.
+     * @param name  name of the property to look up.
+     * @return  a property or {@link Property#NULL_PROPERTY} if no
+     * such property exists.
+     */
     @Nonnull
     Property property(@Nonnull String name);
 }

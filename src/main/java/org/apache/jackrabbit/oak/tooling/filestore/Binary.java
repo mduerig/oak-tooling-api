@@ -22,9 +22,21 @@ import java.io.InputStream;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Instances of the interface represent binary
+ * {@link Property property} values.
+ */
 public interface Binary {
+
+    /**
+     * @return  a new input stream containing all bytes of this binary.
+     * The callers must close the stream when done.
+     */
     @Nonnull
     InputStream bytes();
 
+    /**
+     * @return  the number of bytes contained in this binary.
+     */
     long size();
 }

@@ -27,26 +27,47 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * An instance of this class represent an identifier of a record
+ * in a segment store. A record if consists of an identifier of the
+ * segment containing the record and an offset for the record inside
+ * that segment.
+ */
 public class RecordId {
     @Nonnull
     private final UUID segmentId;
 
     private final int offset;
 
+    /**
+     * Create a new record id instance.
+     * @param segmentId  the segment identifier
+     * @param offset     the offset within the segment
+     */
     public RecordId(@Nonnull UUID segmentId, int offset) {
         this.segmentId = requireNonNull(segmentId);
         this.offset = offset;
     }
 
+    /**
+     * @return  the segment identifier
+     */
     @Nonnull
     public UUID getSegmentId() {
         return segmentId;
     }
 
+    /**
+     * @return  the offset with the segment
+     */
     public int getOffset() {
         return offset;
     }
 
+    /**
+     * @return  {@code true} iff {@code other} is an instance of
+     * this class and has the same segment id and offset.
+     */
     @Override
     public boolean equals(@Nullable  Object other) {
         if (this == other) {

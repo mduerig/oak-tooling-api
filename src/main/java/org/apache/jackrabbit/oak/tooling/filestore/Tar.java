@@ -22,15 +22,32 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+/**
+ * An instance of this interface represents a tar file of
+ * the segment store.
+ */
 public interface Tar {
+
+    /**
+     * @return  name of the tar file
+     */
     @Nonnull
     String name();
 
+    /**
+     * @return  size of the tar file in bytes
+     */
     long size();
 
+    /**
+     * @return  creation time of the tar file
+     */
     long timestamp();
 
-    /** Segment ids in reverse chronological order */
+    /**
+     * @return  the ids of the segments contained in this tar
+     * file in reverse chronological order.
+     */
     @Nonnull
     Iterable<UUID> segmentIds();
 }
