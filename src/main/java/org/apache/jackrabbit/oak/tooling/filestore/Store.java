@@ -51,7 +51,7 @@ public interface Store {
      * reverse chronological order.
      */
     @Nonnull
-    Iterable<JournalEntry> journal();
+    Iterable<JournalEntry> journalEntries();
 
     /**
      * Read a node from the store.
