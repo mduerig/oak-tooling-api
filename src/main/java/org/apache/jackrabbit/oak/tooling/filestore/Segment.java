@@ -19,6 +19,7 @@
 package org.apache.jackrabbit.oak.tooling.filestore;
 
 import java.nio.ByteBuffer;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -83,11 +84,11 @@ public interface Segment {
     ByteBuffer read(int offset, int count);
 
     /**
-     * @return  a human readable string representation of this segment's
-     * header or the empty string for bulk segments.
+     * @return  a human readable map with string keys and values representing
+     * this segment's header or an empty map for bulk segments.
      */
     @Nonnull
-    String header();
+    Map<String, String> header();
 
     /**
      * Create an human readable hex dump of this segment.
