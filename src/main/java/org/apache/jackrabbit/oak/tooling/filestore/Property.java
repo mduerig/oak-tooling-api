@@ -46,14 +46,14 @@ public interface Property {
          * Type of the {@link #NULL_PROPERTY}. No other property has this type.
          */
         @Nonnull
-        public static Type<Void> VOID =
+        public static final Type<Void> VOID =
                 new Type<>(Void.class, "VOID");
 
         /**
          * Type of string properties.
          */
         @Nonnull
-        public static Type<String> STRING =
+        public static final Type<String> STRING =
                 new Type<>(String.class, "STRING");
 
         /**
