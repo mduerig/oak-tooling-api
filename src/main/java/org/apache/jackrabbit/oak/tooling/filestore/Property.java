@@ -216,7 +216,7 @@ public interface Property {
          */
         @Nonnull
         @Override
-        public Type type() {
+        public Type<?> type() {
             return Type.VOID;
         }
 
@@ -257,7 +257,7 @@ public interface Property {
      * @return  the type of this property.
      */
     @Nonnull
-    Type type();
+    Type<?> type();
 
     /**
      * The cardinality of a property returns the number of values
