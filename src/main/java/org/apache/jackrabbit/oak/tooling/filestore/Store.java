@@ -18,6 +18,7 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
+import java.io.Closeable;
 import java.util.UUID;
 
 import javax.annotation.CheckForNull;
@@ -61,6 +62,13 @@ public interface Store {
      */
     @CheckForNull
     Node node(@Nonnull RecordId id);
+
+    /**
+     * Connect an {@link IOMonitor} to the underlying store.
+     * @param ioMonitor  the {@code IOMonitor} instance to connect.
+     * @return  a {@code Closeable} instance for detaching {@code ioMonitor} again.
+     */
+    Closeable addIOMonitor(@Nonnull IOMonitor ioMonitor);
 
     /**
      * Dynamic cast to an underlying implementation type.
