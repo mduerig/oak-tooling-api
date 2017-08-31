@@ -38,6 +38,15 @@ public interface Node {
          */
         @Nonnull
         @Override
+        public Iterable<String> getNodeNames() {
+            return emptyList();
+        }
+
+        /**
+         * @return  always empty.
+         */
+        @Nonnull
+        @Override
         public Iterable<Node> getNodes() {
             return emptyList();
         }
@@ -69,6 +78,12 @@ public interface Node {
             return NULL_PROPERTY;
         }
     };
+
+    /**
+     * @return  the names of the child nodes of this node. The oder is not specified.
+     */
+    @Nonnull
+    Iterable<String> getNodeNames();
 
     /**
      * @return  the child nodes of this node. The order is not specified.
