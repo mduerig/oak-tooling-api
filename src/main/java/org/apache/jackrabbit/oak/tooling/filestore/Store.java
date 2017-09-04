@@ -19,9 +19,9 @@
 package org.apache.jackrabbit.oak.tooling.filestore;
 
 import java.io.Closeable;
+import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -41,11 +41,10 @@ public interface Store {
     /**
      * Read a segment from the store.
      * @param id  the uuid of the segment to read.
-     * @return    the segment with the given uuid or {@code null} if
-     * the store does not contain such a segment.
+     * @return    an optional segment with the given uuid
      */
-    @CheckForNull
-    Segment segment(@Nonnull UUID id);
+    @Nonnull
+    Optional<Segment> segment(@Nonnull UUID id);
 
     /**
      * @return  The entries in the {@code journal.log} in
@@ -57,10 +56,10 @@ public interface Store {
     /**
      * Read a node from the store.
      * @param id  the record id of the node to read.
-     * @return    the node with the given record id or {@code null}
-     * if the store does not contain such a node.
+     * @return    the node with the given record id or
+     * {@link Node#NULL_NODE} if the store does not contain such a node.
      */
-    @CheckForNull
+    @Nonnull
     Node node(@Nonnull RecordId id);
 
     /**
@@ -68,6 +67,7 @@ public interface Store {
      * @param ioMonitor  the {@code IOMonitor} instance to connect.
      * @return  a {@code Closeable} instance for detaching {@code ioMonitor} again.
      */
+    @Nonnull
     Closeable addIOMonitor(@Nonnull IOMonitor ioMonitor);
 
     /**
@@ -77,10 +77,8 @@ public interface Store {
      * @param value      source value to cast
      * @param classType  target type to cast to
      * @param <T>        target type to cast to
-     * @return  result from the cast or {@code null} if casting
-     * the given source value to the given target type is not
-     * available.
+     * @return  an optional result from the cast
      */
-    @CheckForNull
-    <T> T cast(Object value, Class<T> classType);
+    @Nonnull
+    <T> Optional<T> cast(Object value, Class<T> classType);
 }

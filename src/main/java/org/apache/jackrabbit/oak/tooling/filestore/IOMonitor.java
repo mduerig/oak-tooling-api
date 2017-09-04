@@ -20,6 +20,8 @@ package org.apache.jackrabbit.oak.tooling.filestore;
 
 import java.io.File;
 
+import javax.annotation.Nonnull;
+
 /**
  * Callback interface that eases the collection of statistics about I/O
  * operations.
@@ -34,7 +36,7 @@ public interface IOMonitor {
      * @param lsb    Least significant bits of the segment ID.
      * @param length Size of the segment.
      */
-    void beforeSegmentRead(File file, long msb, long lsb, int length);
+    void beforeSegmentRead(@Nonnull File file, long msb, long lsb, int length);
 
     /**
      * Called after a segment is read from the file system. This is called only
@@ -46,7 +48,7 @@ public interface IOMonitor {
      * @param length  Size of the segment.
      * @param elapsed Time spent by the read operation, in nanoseconds.
      */
-    void afterSegmentRead(File file, long msb, long lsb, int length, long elapsed);
+    void afterSegmentRead(@Nonnull File file, long msb, long lsb, int length, long elapsed);
 
     /**
      * Called before a segment is written to the file system.
@@ -56,7 +58,7 @@ public interface IOMonitor {
      * @param lsb    Least significant bits of the segment ID.
      * @param length Size of the segment.
      */
-    void beforeSegmentWrite(File file, long msb, long lsb, int length);
+    void beforeSegmentWrite(@Nonnull File file, long msb, long lsb, int length);
 
     /**
      * Called after a segment is written to the file system. This is called only
@@ -68,6 +70,6 @@ public interface IOMonitor {
      * @param length  Size of the segment.
      * @param elapsed Time spent by the write operation, in nanoseconds.
      */
-    void afterSegmentWrite(File file, long msb, long lsb, int length, long elapsed);
+    void afterSegmentWrite(@Nonnull File file, long msb, long lsb, int length, long elapsed);
 
 }
