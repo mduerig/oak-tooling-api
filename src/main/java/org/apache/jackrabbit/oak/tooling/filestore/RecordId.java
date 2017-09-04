@@ -40,6 +40,16 @@ public class RecordId {
     private final int offset;
 
     /**
+     * Static factory equivalent to {@link #RecordId(UUID, int)}
+     * @param segmentId  the segment identifier
+     * @param offset     the offset within the segment
+     * @return  a new {@code RecordId} instance.
+     */
+    public static RecordId newRecordId(@Nonnull UUID segmentId, int offset) {
+        return new RecordId(segmentId, offset);
+    }
+
+    /**
      * Create a new record id instance.
      * @param segmentId  the segment identifier
      * @param offset     the offset within the segment
