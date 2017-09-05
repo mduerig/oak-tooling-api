@@ -42,6 +42,11 @@ public interface Property {
      * @param <T>  The Java type used to represent an instance of {@code Type<>}
      */
     final class Type<T> {
+        /**
+         * A map of all types from type name to the actual type.
+         */
+        @Nonnull
+        public static final Map<String, Type<?>> ALL = new HashMap<>();
 
         /**
          * Type of the {@link #NULL_PROPERTY}. No other property has this type.
@@ -133,12 +138,6 @@ public interface Property {
         @Nonnull
         public static final Type<BigDecimal> DECIMAL =
                 new Type<>(BigDecimal.class, "DECIMAL");
-
-        /**
-         * A map of all types from type name to the actual type.
-         */
-        @Nonnull
-        public static final Map<String, Type<?>> ALL = new HashMap<>();
 
         @Nonnull
         private final Class<T> type;
