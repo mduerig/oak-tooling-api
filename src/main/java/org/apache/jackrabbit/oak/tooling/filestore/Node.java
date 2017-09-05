@@ -38,7 +38,7 @@ public interface Node {
          */
         @Nonnull
         @Override
-        public Iterable<String> getNodeNames() {
+        public Iterable<String> childNames() {
             return emptyList();
         }
 
@@ -47,7 +47,7 @@ public interface Node {
          */
         @Nonnull
         @Override
-        public Iterable<Node> getNodes() {
+        public Iterable<Node> children() {
             return emptyList();
         }
 
@@ -83,13 +83,13 @@ public interface Node {
      * @return  the names of the child nodes of this node. The oder is not specified.
      */
     @Nonnull
-    Iterable<String> getNodeNames();
+    Iterable<String> childNames();
 
     /**
      * @return  the child nodes of this node. The order is not specified.
      */
     @Nonnull
-    Iterable<Node> getNodes();
+    Iterable<Node> children();
 
     /**
      * Look up a child node of the given {@code name}.
