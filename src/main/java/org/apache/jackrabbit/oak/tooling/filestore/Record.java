@@ -18,8 +18,6 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
-import java.nio.ByteBuffer;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -152,18 +150,4 @@ public interface Record {
      */
     @Nonnull
     Type type();
-
-    /**
-     * Read a number of bytes from this record. This method does not
-     * protect callers from reading beyond this record's boundary.
-     * @param offset  offset from the beginning of this record
-     * @param count   number of bytes to read from this record
-     * @return  a buffer containing {@code count} bytes from this segment
-     * starting at {@code offset}.
-     * @throws IllegalArgumentException if {@code count} or {@code offset} is negative.
-     * @throws IllegalStateException if either {@code offset + count >= segment.size()}
-     * where segment represents this record's underlying segment.
-     */
-    @Nonnull
-    ByteBuffer read(int offset, int count);
 }

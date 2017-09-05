@@ -18,7 +18,6 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
-import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,18 +69,6 @@ public interface Segment {
      */
     @Nonnull
     Iterable<Record> records();
-
-    /**
-     * Read a number of bytes from this segment.
-     * @param offset  offset from the beginning of this segment
-     * @param count   number of bytes to read from this segment
-     * @return  a buffer containing {@code count} bytes from this segment
-     * starting at {@code offset}.
-     * @throws IllegalArgumentException if {@code count} or {@code offset} is negative.
-     * @throws IllegalStateException if either {@code offset + count >= size()}
-     */
-    @Nonnull
-    ByteBuffer read(int offset, int count);
 
     /**
      * @return  a human readable map with string keys and values representing
