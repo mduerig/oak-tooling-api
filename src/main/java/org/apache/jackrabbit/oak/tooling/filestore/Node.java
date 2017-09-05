@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 
 /**
  * An instance of this interface represents a node of a  segment store.
+ * TODO, how do we deal with equality?
  */
 public interface Node {
 

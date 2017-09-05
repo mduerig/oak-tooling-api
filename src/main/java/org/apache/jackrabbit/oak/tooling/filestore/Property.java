@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 
 /**
  * An instance of this interface represents a property of a segment store.
+ * TODO, how do we deal with equality?
  */
 public interface Property {
 
