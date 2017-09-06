@@ -80,6 +80,28 @@ public interface Node {
         }
     };
 
+    Equivalence<Node> EQ = (node1, node2) -> {
+        if (node1 == NULL_NODE && node2 == NULL_NODE) {
+            return true;
+        }
+
+        for (Property p1 : node1.properties()) {
+            Property p2 = node2.property(p1.getName());
+            if (!p1.equals(p2)) {
+                return false;
+            }
+        }
+
+        for (String name : node1.childNames()) {
+            Node c1 = node1.node(name);
+            Node c2 = node2.node(name);
+            if (!c1.equals(c2)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
     /**
      * @return  the names of the child nodes of this node. The oder is not specified.
      */

@@ -247,6 +247,31 @@ public interface Property {
         }
     };
 
+    Equivalence<Property> EQ = (property1, property2) -> {
+        if (property1 == NULL_PROPERTY && property2 == NULL_PROPERTY) {
+            return true;
+        }
+
+        if (property1.type() != property2.type()) {
+            return false;
+        }
+
+        if (property1.cardinality() != property2.cardinality()) {
+            return false;
+        }
+
+        Type<?> type = property1.type();
+        for (int k = 0; k < property1.cardinality(); k++) {
+            Object v1 = property1.value(type, k);
+            Object v2 = property2.value(type, k);
+            if (!v1.equals(v2)) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
     /**
      * @return  the name of this property.
      */

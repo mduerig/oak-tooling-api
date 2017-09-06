@@ -18,6 +18,7 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.annotation.Nonnull;
@@ -27,6 +28,28 @@ import javax.annotation.Nonnull;
  * {@link Property property} values.
  */
 public interface Binary {
+    Equivalence<Binary> EQ = (bin1, bin2) -> {
+        if (bin1.size() != bin2.size()) {
+            return false;
+        }
+
+        try {
+            try (
+                InputStream s1 = bin1.bytes();
+                InputStream s2 = bin2.bytes())
+            {
+                for (int v1 = s1.read(); v1 != -1; v1 = s1.read()) {
+                    if (v1 != s2.read()) {
+                        return false;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return true;
+    };
 
     /**
      * @return  a new input stream containing all bytes of this binary.
