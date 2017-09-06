@@ -29,9 +29,9 @@ import javax.annotation.Nonnull;
  * An instance of this interface represents a node of a segment store.
  * Two instances of the same subtype of {@code Node} are equal (according
  * to {@link #equals(Object)}) iff they are structurally equal. That is iff
- * they have equal child nodes and properties. Two instances of a different
- * subtype of {@code Node} cannot be compared and attempting to do those will
- * cause a {@link IllegalArgumentException}.
+ * they have equal child nodes and properties. Two instances of {@code Node}
+ * obtained from different instances of {@code Store} can't be compared and
+ * attempting to do so will throw an {@link IllegalArgumentException}.
  * <p>
  * <em>Implementation note:</em> the {@link #EQ} predicate can be used to
  * determine structural equality of {@code Node} instances if those cannot

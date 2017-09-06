@@ -34,9 +34,9 @@ import javax.annotation.Nullable;
  * An instance of this interface represents a property of a segment store.
  * Two instances of the same subtype of {@code Property} are equal (according
  * to {@link #equals(Object)}) iff they are structurally equal. That is iff
- * they have equal values. Two instances of a different subtype of
- * {@code Property} cannot be compared and attempting to do those will cause
- * a {@link IllegalArgumentException}.
+ * they have equal values. Two instances of {@code Property} obtained from
+ * different instances of {@code Store} can't be compared and attempting to
+ * do so will throw an {@link IllegalArgumentException}.
  * <p>
  * <em>Implementation note:</em> the {@link #EQ} predicate can be used to
  * determine structural equality of {@code Property} instances if those cannot

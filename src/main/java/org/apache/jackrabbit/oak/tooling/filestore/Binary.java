@@ -28,9 +28,9 @@ import javax.annotation.Nonnull;
  * Instances of the interface represent binary {@link Property property} values.
  * Two instances of the same subtype of {@code Binary} are equal (according
  * to {@link #equals(Object)}) iff they are structurally equal. That is iff
- * they contain equal bytes. Two instances of a different subtype of
- * {@code Property} cannot be compared and attempting to do those will cause
- * a {@link IllegalArgumentException}.
+ * they contain equal bytes. Two instances of {@code Binary} obtained from
+ * different instances of {@code Store} can't be compared and attempting to
+ * do so will throw an {@link IllegalArgumentException}.
  * <p>
  * <em>Implementation note:</em> the {@link #EQ} predicate can be used to
  * determine structural equality of {@code Binary} instances if those cannot
