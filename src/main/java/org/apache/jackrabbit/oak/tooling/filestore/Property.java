@@ -25,13 +25,22 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * An instance of this interface represents a property of a segment store.
- * TODO, how do we deal with equality?
+ * Two instances of the same subtype of {@code Property} are equal (according
+ * to {@link #equals(Object)}) iff they are structurally equal. That is iff
+ * they have equal values. Two instances of a different subtype of
+ * {@code Property} cannot be compared and attempting to do those will cause
+ * a {@link IllegalArgumentException}.
+ * <p>
+ * <em>Implementation note:</em> the {@link #EQ} predicate can be used to
+ * determine structural equality of {@code Property} instances if those cannot
+ * come up with a more efficient implementation.
  */
 public interface Property {
 
@@ -245,6 +254,48 @@ public interface Property {
         public <T> Iterable<T> values(Type<T> type) {
             return emptyList();
         }
+    };
+
+    /**
+     * Predicate representing structural equality of {@code Node}
+     * instances. Two {@code Property} instances are structural equal iff
+     * they have equal values, except for the {@link #NULL_PROPERTY}, which
+     * is only equal to itself.
+     */
+    BiPredicate<Property, Property> EQ = (property1, property2) -> {
+        if (property1 == property2) {
+            return true;
+        }
+        if (property1 == NULL_PROPERTY || property2 == NULL_PROPERTY) {
+            return false;
+        }
+
+        if (property1.type() != property2.type()) {
+            return false;
+        }
+
+        if (property1.cardinality() != property2.cardinality()) {
+            return false;
+        }
+
+        Type<?> type = property1.type();
+        for (int k = 0; k < property1.cardinality(); k++) {
+            if (type == Type.BINARY) {
+                Binary v1 = property1.value(Type.BINARY, k);
+                Binary v2 = property2.value(Type.BINARY, k);
+                if (!Binary.EQ.test(v1, v2)) {
+                    return false;
+                }
+            } else {
+                Object v1 = property1.value(type, k);
+                Object v2 = property2.value(type, k);
+                if (!v1.equals(v2)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     };
 
     /**

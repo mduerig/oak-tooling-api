@@ -18,15 +18,53 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
 
 /**
- * Instances of the interface represent binary
- * {@link Property property} values.
+ * Instances of the interface represent binary {@link Property property} values.
+ * Two instances of the same subtype of {@code Binary} are equal (according
+ * to {@link #equals(Object)}) iff they are structurally equal. That is iff
+ * they contain equal bytes. Two instances of a different subtype of
+ * {@code Property} cannot be compared and attempting to do those will cause
+ * a {@link IllegalArgumentException}.
+ * <p>
+ * <em>Implementation note:</em> the {@link #EQ} predicate can be used to
+ * determine structural equality of {@code Binary} instances if those cannot
+ * come up with a more efficient implementation.
  */
 public interface Binary {
+
+    /**
+     * Predicate representing structural equality of {@code Binary}
+     * instances. Two {@code Binary} instances are structural equal iff
+     * they contain equal bytes.
+     */
+    BiPredicate<Binary, Binary> EQ = (bin1, bin2) -> {
+        if (bin1.size() != bin2.size()) {
+            return false;
+        }
+
+        try {
+            try (
+                InputStream s1 = bin1.bytes();
+                InputStream s2 = bin2.bytes())
+            {
+                for (int v1 = s1.read(); v1 != -1; v1 = s1.read()) {
+                    if (v1 != s2.read()) {
+                        return false;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return true;
+    };
 
     /**
      * @return  a new input stream containing all bytes of this binary.
