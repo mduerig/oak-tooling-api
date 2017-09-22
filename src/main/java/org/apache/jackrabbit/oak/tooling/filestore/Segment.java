@@ -18,7 +18,6 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore;
 
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -71,12 +70,10 @@ public interface Segment {
     Iterable<Record> records();
 
     /**
-     * @return  a human readable map with string keys and values representing
-     * this segment's header or an empty map for bulk segments.
-     * TODO: should we return a proper interface instead of a map here?
+     * @return  the meta data associated with this segment.
      */
     @Nonnull
-    Map<String, String> header();
+    SegmentMetaData metaData();
 
     /**
      * Create an human readable hex dump of this segment.
