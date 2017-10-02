@@ -88,6 +88,31 @@ public interface Node {
         public Property property(@Nonnull String name) {
             return NULL_PROPERTY;
         }
+
+        /**
+         * @param other
+         * @return  {@code true} iff {@code other == this == NULL_NODE}
+         */
+        @Override
+        public boolean equals(@Nonnull Object other) {
+            return other instanceof Node && EQ.test(this, (Node) other);
+        }
+
+        /**
+         * @return {@code "NULL_NODE"}
+         */
+        @Override
+        public String toString() {
+            return "NULL_NODE";
+        }
+
+        /**
+         * @return 0
+         */
+        @Override
+        public int hashCode() {
+            return 0;
+        }
     };
 
     /**

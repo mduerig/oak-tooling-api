@@ -254,6 +254,31 @@ public interface Property {
         public <T> Iterable<T> values(Type<T> type) {
             return emptyList();
         }
+
+        /**
+         * @param other
+         * @return  {@code true} iff {@code other == this == NULL_PROPERTY}
+         */
+        @Override
+        public boolean equals(@Nonnull Object other) {
+            return other instanceof Property && EQ.test(this, (Property) other);
+        }
+
+        /**
+         * @return {@code "NULL_NODE"}
+         */
+        @Override
+        public String toString() {
+            return "NULL_PROPERTY";
+        }
+
+        /**
+         * @return 0
+         */
+        @Override
+        public int hashCode() {
+            return 0;
+        }
     };
 
     /**
