@@ -18,8 +18,6 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.api;
 
-import java.util.UUID;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -45,9 +43,8 @@ public interface Tar {
     long timestamp();
 
     /**
-     * @return  the ids of the segments contained in this tar
-     * file in reverse chronological order.
+     * @return  the segments contained in this tar file in reverse chronological order.
      */
     @Nonnull
-    Iterable<UUID> segmentIds();
+    Iterable<Segment> segments();
 }

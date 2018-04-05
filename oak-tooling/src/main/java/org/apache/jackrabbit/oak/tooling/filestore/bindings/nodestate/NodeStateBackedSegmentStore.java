@@ -18,10 +18,7 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
-import static java.util.Spliterator.IMMUTABLE;
-import static java.util.Spliterator.NONNULL;
-import static java.util.Spliterators.spliteratorUnknownSize;
-import static java.util.stream.StreamSupport.stream;
+import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -67,7 +64,15 @@ public class NodeStateBackedSegmentStore implements SegmentStore {
     @Nonnull
     @Override
     public Optional<Segment> segment(@Nonnull UUID id) {
-        return Optional.empty(); // michid implement segment
+        return asStream(tars())
+                .flatMap(NodeStateBackedSegmentStore::getSegments)
+                .filter(segment -> id.equals(segment.id()))
+                .findFirst();
+    }
+
+    @Nonnull
+    private static Stream<Segment> getSegments(@Nonnull Tar tar) {
+        return asStream(tar.segments());
     }
 
     @Nonnull
@@ -79,9 +84,4 @@ public class NodeStateBackedSegmentStore implements SegmentStore {
                         .iterator();
     }
 
-    // michid move
-    private static <T> Stream<T> asStream(@Nonnull Iterable<T> childNodeEntries) {
-        return stream(spliteratorUnknownSize(
-                childNodeEntries.iterator(), IMMUTABLE | NONNULL), false);
-    }
 }

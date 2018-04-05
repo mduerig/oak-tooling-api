@@ -1,10 +1,10 @@
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
-import java.util.UUID;
-
 import javax.annotation.Nonnull;
 
+import org.apache.jackrabbit.oak.spi.state.ChildNodeEntry;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
+import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
 
 /**
@@ -42,8 +42,11 @@ public class NodeBackedTar implements Tar {
 
     @Nonnull
     @Override
-    public Iterable<UUID> segmentIds() {
-        return null; // michid implement segmentIds
+    public Iterable<Segment> segments() {
+        return () -> Streams.asStream(node.getChildNodeEntries())
+                        .map(ChildNodeEntry::getNodeState)
+                        .map(NodeStateBackedSegment::newSegment)
+                        .iterator();
     }
 
     @Override
