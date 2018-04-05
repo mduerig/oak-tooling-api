@@ -22,28 +22,56 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>oak-tooling-reactor</artifactId>
+  <artifactId>oak-tooling-it</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Oak Tooling API Reactor</name>
-
-  <inceptionYear>2018</inceptionYear>
-  <description>
-    The Oak Tooling API provides a common and sufficiently stable tooling API for implementing
-    segment store related tools. The API is independent of Oak and not intended for normal
-    production use of Oak.
-  </description>
+  <packaging>jar</packaging>
+  <name>Oak Tooling API integration tests</name>
 
   <parent>
     <groupId>org.apache.jackrabbit</groupId>
     <artifactId>oak-tooling-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>./oak-tooling-parent/pom.xml</relativePath>
+    <relativePath>../oak-tooling-parent/pom.xml</relativePath>
   </parent>
 
-  <modules>
-    <module>oak-tooling-parent</module>
-    <module>oak-tooling</module>
-    <module>oak-tooling-it</module>
-  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>oak-tooling-api</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>oak-segment-tar</artifactId>
+      <version>1.10-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>oak-store-spi</artifactId>
+      <version>1.10-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
 </project>

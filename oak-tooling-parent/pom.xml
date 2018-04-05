@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd ">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.apache.jackrabbit</groupId>
+  <artifactId>oak-tooling-parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>Oak Tooling Parent POM</name>
+  <packaging>pom</packaging>
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>18</version>
+    <relativePath />
+  </parent>
+
+  <properties>
+    <java.version>1.8</java.version>
+    <java.version.signature>java18</java.version.signature>
+  </properties>
+
+  <prerequisites>
+    <maven>3.2.1</maven>
+  </prerequisites>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <target>${java.version}</target>
+            <source>${java.version}</source>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <source>${java.version}</source>
+            <links>
+              <link>http://docs.oracle.com/javase/8/docs/api/</link>
+            </links>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.4.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.20.1</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>oak-store-spi</artifactId>
+        <version>1.8.0</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

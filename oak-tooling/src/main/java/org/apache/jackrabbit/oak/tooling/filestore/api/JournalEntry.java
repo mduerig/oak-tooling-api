@@ -22,11 +22,18 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import org.apache.jackrabbit.oak.spi.state.NodeState;
+
 /**
  * An instance of this interface represents an entry in the
  * segments store's {@code journal.log} file.
  */
 public interface JournalEntry {
+
+    /**
+     * @return  the time stamp of this entry
+     */
+    long timestamp();
 
     /**
      * @return  the segment id of this journal entry
@@ -40,7 +47,8 @@ public interface JournalEntry {
     int offset();
 
     /**
-     * @return  the time stamp of this entry
+     * @return  the root node state of this revision.
      */
-    long timestamp();
+    @Nonnull
+    NodeState getRoot();
 }
