@@ -16,7 +16,9 @@
  *
  */
 
-package org.apache.jackrabbit.oak.tooling.filestore;
+package org.apache.jackrabbit.oak.tooling.filestore.api;
+
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -140,10 +142,15 @@ public interface Record {
     }
 
     /**
-     * @return  the identifier of this record
+     * @return  the segment id of this record
      */
     @Nonnull
-    RecordId id();
+    UUID segmentId();
+
+    /**
+     * @return  the offset of this record in the segment pointed to by {@link #segmentId()}
+     */
+    int offset();
 
     /**
      * @return  the type of this record

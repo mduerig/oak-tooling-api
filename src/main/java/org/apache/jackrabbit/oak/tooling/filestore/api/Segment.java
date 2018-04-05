@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.jackrabbit.oak.tooling.filestore;
+package org.apache.jackrabbit.oak.tooling.filestore.api;
 
 import java.util.UUID;
 

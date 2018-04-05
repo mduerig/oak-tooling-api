@@ -16,24 +16,38 @@
  *
  */
 
-package org.apache.jackrabbit.oak.tooling.filestore;
+package org.apache.jackrabbit.oak.tooling.filestore.api;
 
-import javax.annotation.Nonnull;
+import java.util.Map;
 
 /**
- * An instance of this interface represents an entry in the
- * segments store's {@code journal.log} file.
+ * An instance of this class represent some metadata associated
+ * with a segment.
  */
-public interface JournalEntry {
+public interface SegmentMetaData {
 
     /**
-     * @return  the record id of this journal entry
+     * @return  the version of the segment format
      */
-    @Nonnull
-    RecordId id();
+    int version();
 
     /**
-     * @return  the time stamp of this entry
+     * @return  the garbage collection generation
      */
-    long timestamp();
+    int generation();
+
+    /**
+     * @return  the full garbage collection generation
+     */
+    int fullGeneration();
+
+    /**
+     * @return  {@code true} iff this segment has been created by compaction
+     */
+    boolean compacted();
+
+    /**
+     * @return  a map representation of the segment info
+     */
+    Map<String, String> info();
 }

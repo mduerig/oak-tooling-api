@@ -16,38 +16,31 @@
  *
  */
 
-package org.apache.jackrabbit.oak.tooling.filestore;
+package org.apache.jackrabbit.oak.tooling.filestore.api;
 
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
 /**
- * An instance of this interface represents a tar file of
- * the segment store.
+ * An instance of this interface represents an entry in the
+ * segments store's {@code journal.log} file.
  */
-public interface Tar {
+public interface JournalEntry {
 
     /**
-     * @return  name of the tar file
+     * @return  the segment id of this journal entry
      */
     @Nonnull
-    String name();
+    UUID segmentId();
 
     /**
-     * @return  size of the tar file in bytes
+     * @return  the offset of this journal entry in the segment pointed to by {@link #segmentId()}
      */
-    long size();
+    int offset();
 
     /**
-     * @return  creation time of the tar file
+     * @return  the time stamp of this entry
      */
     long timestamp();
-
-    /**
-     * @return  the ids of the segments contained in this tar
-     * file in reverse chronological order.
-     */
-    @Nonnull
-    Iterable<UUID> segmentIds();
 }

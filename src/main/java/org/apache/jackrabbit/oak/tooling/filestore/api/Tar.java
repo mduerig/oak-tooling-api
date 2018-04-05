@@ -16,38 +16,38 @@
  *
  */
 
-package org.apache.jackrabbit.oak.tooling.filestore;
+package org.apache.jackrabbit.oak.tooling.filestore.api;
 
-import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
 
 /**
- * An instance of this class represent some metadata associated
- * with a segment.
+ * An instance of this interface represents a tar file of
+ * the segment store.
  */
-public interface SegmentMetaData {
+public interface Tar {
 
     /**
-     * @return  the version of the segment format
+     * @return  name of the tar file
      */
-    int version();
+    @Nonnull
+    String name();
 
     /**
-     * @return  the garbage collection generation
+     * @return  size of the tar file in bytes
      */
-    int generation();
+    long size();
 
     /**
-     * @return  the full garbage collection generation
+     * @return  creation time of the tar file
      */
-    int fullGeneration();
+    long timestamp();
 
     /**
-     * @return  {@code true} iff this segment has been created by compaction
+     * @return  the ids of the segments contained in this tar
+     * file in reverse chronological order.
      */
-    boolean compacted();
-
-    /**
-     * @return  a map representation of the segment info
-     */
-    Map<String, String> info();
+    @Nonnull
+    Iterable<UUID> segmentIds();
 }
