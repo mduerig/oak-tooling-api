@@ -18,7 +18,13 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
+import static java.lang.Integer.parseInt;
+import static java.util.regex.Pattern.compile;
+
+import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
@@ -42,18 +48,24 @@ public class NodeStateBackedJournalEntry implements JournalEntry {
 
     @Override
     public long timestamp() {
-        return 0; // michid implement timestamp
+        return node.getLong("timestamp");
     }
 
     @Nonnull
     @Override
     public UUID segmentId() {
-        return null; // michid implement segmentId
+        return Optional.ofNullable(node.getString("revision"))
+                .flatMap(RecordId::fromString)
+                .orElseThrow(RuntimeException::new)
+                .uuid;
     }
 
     @Override
     public int offset() {
-        return 0; // michid implement offset
+        return Optional.ofNullable(node.getString("revision"))
+                .flatMap(RecordId::fromString)
+                .orElseThrow(RuntimeException::new)
+                .offset;
     }
 
     @Nonnull
@@ -64,7 +76,40 @@ public class NodeStateBackedJournalEntry implements JournalEntry {
 
     @Override
     public String toString() {
-        // michid implement toString
         return node.toString();
     }
+
+    private static class RecordId {
+        static final Pattern PATTERN = compile(
+                "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
+                        + "(:(0|[1-9][0-9]*)|\\.([0-9a-f]{8}))");
+
+        @Nonnull
+        final UUID uuid;
+        final int offset;
+
+        @Nonnull
+        static Optional<RecordId> fromString(@Nonnull String revision) {
+            Matcher matcher = PATTERN.matcher(revision);
+            if (matcher.matches()) {
+                UUID uuid = UUID.fromString(matcher.group(1));
+
+                int offset;
+                if (matcher.group(3) != null) {
+                    offset = parseInt(matcher.group(3));
+                } else {
+                    offset = parseInt(matcher.group(4), 16);
+                }
+                return Optional.of(new RecordId(uuid, offset));
+            } else {
+                return Optional.empty();
+            }
+        }
+
+        public RecordId(@Nonnull UUID uuid, int offset) {
+            this.uuid = uuid;
+            this.offset = offset;
+        }
+    }
+
 }

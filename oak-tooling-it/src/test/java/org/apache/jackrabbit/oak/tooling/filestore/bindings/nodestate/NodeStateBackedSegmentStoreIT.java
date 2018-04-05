@@ -18,6 +18,7 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
+import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.limit;
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
@@ -26,12 +27,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.google.common.collect.Iterables;
 import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
 import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
 import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
+import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
@@ -57,6 +58,11 @@ public class NodeStateBackedSegmentStoreIT {
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
         limit(ss.journalEntries(), 20)
                 .forEach(e -> System.out.println(e.getRoot()));
+
+        JournalEntry e = get(ss.journalEntries(), 0);
+        System.out.println(e.getRoot());
+        System.out.println(e.segmentId());
+        System.out.println(e.offset());
 
         fs.close();
     }
@@ -108,8 +114,8 @@ public class NodeStateBackedSegmentStoreIT {
 
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
 
-        Tar t = Iterables.get(ss.tars(), 2);
-        Segment s = Iterables.get(t.segments(), 3);
+        Tar t = get(ss.tars(), 2);
+        Segment s = get(t.segments(), 3);
 
         Optional<Segment> s2 = ss.segment(s.id());
         System.out.println(s2);
