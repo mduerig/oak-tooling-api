@@ -34,11 +34,10 @@ import org.junit.Test;
 
 /**
  * michid document
+ * michid implement real tests
  */
 public class NodeStateBackedSegmentStoreIT {
 
-
-    // michid implement real tests
     @Test
     public void journalTest() throws IOException, InvalidFileStoreVersionException {
         FileStoreBuilder fsb = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
@@ -53,6 +52,23 @@ public class NodeStateBackedSegmentStoreIT {
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
         Iterables.limit(ss.journalEntries(), 20)
                 .forEach(e -> System.out.println(e.getRoot()));
+
+        fs.close();
+    }
+
+    @Test
+    public void tarsTest() throws IOException, InvalidFileStoreVersionException {
+        FileStoreBuilder fsb = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
+        ReadOnlyFileStore fs = fsb.buildReadOnly();
+
+        NodeState proc = Proc.builder()
+            .withPersistence(fsb.getPersistence())
+            .withSegmentIdProvider(fs.getSegmentIdProvider())
+            .withSegmentReader(fs.getReader())
+            .build();
+
+        SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
+        ss.tars().forEach(System.out::println);
 
         fs.close();
     }
