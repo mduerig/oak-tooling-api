@@ -80,6 +80,9 @@ public class NodeStateBackedSegmentStoreIT {
 
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
         limit(ss.tars(), 20).forEach(System.out::println);
+        Tar t = get(ss.tars(), 0);
+        System.out.println(t.name());
+        System.out.println(t.size());
 
         fs.close();
     }
