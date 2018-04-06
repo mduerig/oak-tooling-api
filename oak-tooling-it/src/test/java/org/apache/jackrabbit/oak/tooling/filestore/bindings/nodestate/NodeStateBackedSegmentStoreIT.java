@@ -36,6 +36,7 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -48,12 +49,7 @@ public class NodeStateBackedSegmentStoreIT {
     public void journalTest() throws IOException, InvalidFileStoreVersionException {
         FileStoreBuilder fsb = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
         ReadOnlyFileStore fs = fsb.buildReadOnly();
-
-        NodeState proc = Proc.builder()
-            .withPersistence(fsb.getPersistence())
-            .withSegmentIdProvider(fs.getSegmentIdProvider())
-            .withSegmentReader(fs.getReader())
-            .build();
+        NodeState proc = Proc.of(fsb.buildProcBackend(fs));
 
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
         limit(ss.journalEntries(), 20)
@@ -71,12 +67,7 @@ public class NodeStateBackedSegmentStoreIT {
     public void tarsTest() throws IOException, InvalidFileStoreVersionException {
         FileStoreBuilder fsb = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
         ReadOnlyFileStore fs = fsb.buildReadOnly();
-
-        NodeState proc = Proc.builder()
-            .withPersistence(fsb.getPersistence())
-            .withSegmentIdProvider(fs.getSegmentIdProvider())
-            .withSegmentReader(fs.getReader())
-            .build();
+        NodeState proc = Proc.of(fsb.buildProcBackend(fs));
 
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
         limit(ss.tars(), 20).forEach(System.out::println);
@@ -91,12 +82,7 @@ public class NodeStateBackedSegmentStoreIT {
     public void segmentsTest() throws IOException, InvalidFileStoreVersionException {
         FileStoreBuilder fsb = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
         ReadOnlyFileStore fs = fsb.buildReadOnly();
-
-        NodeState proc = Proc.builder()
-            .withPersistence(fsb.getPersistence())
-            .withSegmentIdProvider(fs.getSegmentIdProvider())
-            .withSegmentReader(fs.getReader())
-            .build();
+        NodeState proc = Proc.of(fsb.buildProcBackend(fs));
 
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
         limit(getFirst(ss.tars(), null).segments(), 20).forEach(System.out::println);
@@ -105,15 +91,11 @@ public class NodeStateBackedSegmentStoreIT {
     }
 
     @Test
+    @Ignore("WIP")
     public void getSegmentTest() throws IOException, InvalidFileStoreVersionException {
         FileStoreBuilder fsb = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
         ReadOnlyFileStore fs = fsb.buildReadOnly();
-
-        NodeState proc = Proc.builder()
-            .withPersistence(fsb.getPersistence())
-            .withSegmentIdProvider(fs.getSegmentIdProvider())
-            .withSegmentReader(fs.getReader())
-            .build();
+        NodeState proc = Proc.of(fsb.buildProcBackend(fs));
 
         SegmentStore ss = NodeStateBackedSegmentStore.newSegmentStore(proc);
 
