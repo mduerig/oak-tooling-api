@@ -31,7 +31,10 @@ public class NodeStateBackedRecord implements Record {
     @Nonnull
     @Override
     public UUID segmentId() {
-        return null; // michid implement segmentId
+        return Optional.ofNullable(node.getProperty("segmentId"))
+                .map(property -> property.getValue(STRING))
+                .map(UUID::fromString)
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
@@ -50,7 +53,9 @@ public class NodeStateBackedRecord implements Record {
 
     @Override
     public int address() {
-        return 0; // michid implement address
+        return Optional.ofNullable(node.getProperty("address"))
+                .map(property -> property.getValue(LONG).intValue())
+                .orElseThrow(RuntimeException::new);
     }
 
     @Nonnull

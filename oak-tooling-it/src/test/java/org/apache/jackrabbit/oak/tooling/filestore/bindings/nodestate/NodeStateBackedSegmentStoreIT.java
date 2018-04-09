@@ -134,8 +134,7 @@ public class NodeStateBackedSegmentStoreIT {
         Iterable<Record> records = segment.records();
         assertTrue(records.iterator().hasNext());
         Record record = records.iterator().next();
-        // michid implement segmentId
-        // assertEquals(segment.id(), record.segmentId());
+        assertEquals(segment.id(), record.segmentId());
         assertTrue(record.number() >= 0);
         assertTrue(record.offset() >= 0);
         assertTrue(asList(Record.Type.values()).contains(record.type()));
