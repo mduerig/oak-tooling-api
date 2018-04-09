@@ -1,7 +1,11 @@
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
+import static org.apache.jackrabbit.oak.api.Type.BOOLEAN;
+import static org.apache.jackrabbit.oak.api.Type.LONG;
+
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -12,26 +16,39 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentMetaData;
  * michid document
  */
 public class NodeBackedSegmentMetaData implements SegmentMetaData {
-    public NodeBackedSegmentMetaData(NodeState node) {}
+    @Nonnull
+    private final NodeState node;
+
+    public NodeBackedSegmentMetaData(@Nonnull NodeState node) {this.node = node;}
 
     @Override
     public int version() {
-        return 0; // michid implement version
+        return 0;
+        // michid implement version
+//        return Optional.ofNullable(node.getProperty("version"))
+//                .map(property -> property.getValue(LONG).intValue())
+//                .orElseThrow(RuntimeException::new);
     }
 
     @Override
     public int generation() {
-        return 0; // michid implement generation
+        return Optional.ofNullable(node.getProperty("generation"))
+                .map(property -> property.getValue(LONG).intValue())
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
     public int fullGeneration() {
-        return 0; // michid implement fullGeneration
+        return Optional.ofNullable(node.getProperty("fullGeneration"))
+                .map(property -> property.getValue(LONG).intValue())
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
     public boolean compacted() {
-        return false; // michid implement compacted
+        return Optional.ofNullable(node.getProperty("compacted"))
+                .map(property -> property.getValue(BOOLEAN))
+                .orElseThrow(RuntimeException::new);
     }
 
     @Nonnull

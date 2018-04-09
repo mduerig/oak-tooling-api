@@ -109,6 +109,12 @@ public class NodeStateBackedSegmentStoreIT {
         System.out.println(s.records());
         System.out.println(s.data().length());
 
+        System.out.println(s.metaData().version());
+        System.out.println(s.metaData().generation());
+        System.out.println(s.metaData().fullGeneration());
+        System.out.println(s.metaData().compacted());
+        System.out.println(s.metaData().info());
+
         fs.close();
     }
 
