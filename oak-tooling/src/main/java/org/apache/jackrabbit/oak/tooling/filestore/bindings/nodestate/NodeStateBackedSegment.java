@@ -1,8 +1,11 @@
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
 import static org.apache.jackrabbit.oak.api.Type.BINARY;
+import static org.apache.jackrabbit.oak.api.Type.BOOLEAN;
 import static org.apache.jackrabbit.oak.api.Type.LONG;
 import static org.apache.jackrabbit.oak.api.Type.STRING;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.BULK;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +63,10 @@ public class NodeStateBackedSegment implements Segment {
     @Nonnull
     @Override
     public Type type() {
-        return Type.DATA; // michid implement type
+        return Optional.ofNullable(node.getProperty("isDataSegment"))
+                .map(property -> property.getValue(BOOLEAN))
+                .map(b -> b ? DATA : BULK)
+                .orElseThrow(RuntimeException::new);
     }
 
     @Nonnull
@@ -101,7 +107,7 @@ public class NodeStateBackedSegment implements Segment {
                               metaData().generation(), metaData().fullGeneration(), metaData().compacted());
                 writer.format("Info: (%s)%n", Joiner.on(',').withKeyValueSeparator("=").join(metaData().info()));
 
-                if (type() == Type.DATA) {
+                if (type() == DATA) {
                     writer.println("--------------------------------------------------------------------------");
                     int i = 1;
                     for (UUID segmentId : references()) {
