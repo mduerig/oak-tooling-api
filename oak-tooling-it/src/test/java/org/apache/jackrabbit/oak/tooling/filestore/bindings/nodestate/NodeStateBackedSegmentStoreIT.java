@@ -128,6 +128,10 @@ public class NodeStateBackedSegmentStoreIT {
         assertTrue(info.containsKey("wid"));
         assertTrue(info.containsKey("sno"));
         assertTrue(info.containsKey("t"));
+
+        for (Segment cne : segment.references()) {
+            System.out.println(cne);
+        }
     }
 
 }

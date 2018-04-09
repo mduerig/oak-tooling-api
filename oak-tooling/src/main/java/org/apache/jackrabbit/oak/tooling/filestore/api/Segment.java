@@ -28,7 +28,7 @@ import org.apache.jackrabbit.oak.api.Blob;
  * An instance of this interface represents a segment of the
  * segment store.
  */
-public interface Segment {
+public interface Segment {  // michid deal with non present segments
 
     /**
      * Type of the segment.
@@ -60,10 +60,10 @@ public interface Segment {
     Type type();
 
     /**
-     * @return  the ids of the segments referenced by this segment
+     * @return  segments referenced by this segment
      */
     @Nonnull
-    Iterable<UUID> references();
+    Iterable<Segment> references();
 
     /**
      * @return  the records contained in this segment

@@ -6,6 +6,7 @@ import static org.apache.jackrabbit.oak.api.Type.LONG;
 import static org.apache.jackrabbit.oak.api.Type.STRING;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.BULK;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
+import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import com.google.common.base.Joiner;
 import org.apache.commons.io.HexDump;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.apache.jackrabbit.oak.api.Blob;
+import org.apache.jackrabbit.oak.spi.state.ChildNodeEntry;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Record;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
@@ -71,8 +73,11 @@ public class NodeStateBackedSegment implements Segment {
 
     @Nonnull
     @Override
-    public Iterable<UUID> references() {
-        return Collections.emptyList(); // michid implement references
+    public Iterable<Segment> references() {
+        return () -> asStream(node.getChildNode("references").getChildNodeEntries())
+                .map(ChildNodeEntry::getNodeState)
+                .map(NodeStateBackedSegment::newSegment)
+                .iterator();
     }
 
     @Nonnull
@@ -110,8 +115,8 @@ public class NodeStateBackedSegment implements Segment {
                 if (type() == DATA) {
                     writer.println("--------------------------------------------------------------------------");
                     int i = 1;
-                    for (UUID segmentId : references()) {
-                        writer.format("reference %02x: %s%n", i++, segmentId);
+                    for (Segment segment : references()) {
+                        writer.format("reference %02x: %s%n", i++, segment.id());
                     }
                     for (Record record : records()) {
                         int offset = record.offset();
