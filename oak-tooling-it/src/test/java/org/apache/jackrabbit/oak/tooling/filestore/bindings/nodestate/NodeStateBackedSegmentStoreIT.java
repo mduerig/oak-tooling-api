@@ -18,14 +18,22 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
-import static com.google.common.collect.Iterables.get;
-import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.limit;
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
+import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
 import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
@@ -33,17 +41,16 @@ import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
+import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentMetaData;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
 import org.junit.After;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * michid document
- * michid implement real tests
- */
 public class NodeStateBackedSegmentStoreIT {
+    private final static String SEGMENT_DIR = System.getProperty("segmentstore", null);
 
     private ReadOnlyFileStore fileStore;
 
@@ -51,7 +58,10 @@ public class NodeStateBackedSegmentStoreIT {
 
     @Before
     public void setup() throws IOException, InvalidFileStoreVersionException {
-        FileStoreBuilder builder = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
+        assumeTrue("No segment store directory specified. " +
+                           "Use -Dsegmentstore=/path/to/segmentstore", SEGMENT_DIR != null);
+
+        FileStoreBuilder builder = fileStoreBuilder(new File(SEGMENT_DIR));
         fileStore = builder.buildReadOnly();
         segmentStore = newSegmentStore(Proc.of(builder.buildProcBackend(fileStore)));
     }
@@ -59,53 +69,65 @@ public class NodeStateBackedSegmentStoreIT {
     @After
     public void tearDown() {
         segmentStore = null;
-        fileStore.close();
+        if (fileStore != null) {
+            fileStore.close();
+        }
     }
 
     @Test
     public void journalTest() {
-        limit(segmentStore.journalEntries(), 20)
-                .forEach(e -> System.out.println(e.getRoot()));
+        Iterable<JournalEntry> journal = segmentStore.journalEntries();
+        assumeFalse("Cannot run with empty journal", isEmpty(journal));
 
-        JournalEntry e = get(segmentStore.journalEntries(), 0);
-        System.out.println(e.getRoot());
-        System.out.println(e.segmentId());
-        System.out.println(e.offset());
+        limit(journal, 20).forEach(entry -> {
+            assertTrue(entry.getRoot().exists());
+            assertNotNull(entry.segmentId());
+            assertTrue(entry.offset() >= 0);
+        });
     }
 
     @Test
     public void tarsTest() {
-        limit(segmentStore.tars(), 20).forEach(System.out::println);
-        Tar t = get(segmentStore.tars(), 0);
-        System.out.println(t.name());
-        System.out.println(t.timestamp());
-        System.out.println(t.size());
+        Iterable<Tar> tars = segmentStore.tars();
+        assumeFalse("Cannot run with empty segment store", isEmpty(tars));
+
+        limit(tars, 20).forEach(tar -> {
+            assertTrue(tar.name().startsWith("data"));
+            // michid implement timestamp
+            // long tenYearsAgo = currentTimeMillis() - MILLISECONDS.convert(3650, DAYS);
+            // assertTrue(tar.timestamp() > tenYearsAgo);
+            assertTrue(tar.size() > 0);
+            assertTrue(tar.segments().iterator().hasNext());
+        });
     }
 
     @Test
     public void segmentsTest() {
-        limit(getFirst(segmentStore.tars(), null).segments(), 20).forEach(System.out::println);
-    }
+        Segment segment = asStream(segmentStore.tars())
+                .flatMap(tar -> asStream(tar.segments()))
+                .filter(s -> s.type() == DATA)
+                .findFirst()
+                .orElseThrow(() ->
+                     new AssumptionViolatedException("Cannot run with empty segment store"));
 
-    @Test
-    public void getSegmentTest() {
-        Tar t = get(segmentStore.tars(), 2);
-        Segment s = get(t.segments(), 3);
+        assertNotNull(segment.id());
+        assertTrue(segment.length() > 0);
+        assertSame(segment.type(), DATA);
+        assertNotNull(segment.data());
+        assertEquals(segment.length(), segment.data().length());
+        assertTrue(segment.hexDump(true).contains(" 0aK"));
 
-        System.out.println(s.hexDump(true).substring(0, 1000));
-        System.out.println(s);
-        System.out.println(s.id());
-        System.out.println(s.length());
-        System.out.println(s.type());
-        System.out.println(s.references());
-        System.out.println(s.records());
-        System.out.println(s.data().length());
+        SegmentMetaData metaData = segment.metaData();
+        assertNotNull(metaData);
+        assertTrue(metaData.version() >= 10);
+        assertTrue(metaData.generation() >= 0);
+        assertTrue(metaData.fullGeneration() >= 0);
 
-        System.out.println(s.metaData().version());
-        System.out.println(s.metaData().generation());
-        System.out.println(s.metaData().fullGeneration());
-        System.out.println(s.metaData().compacted());
-        System.out.println(s.metaData().info());
+        Map<String, String> info = metaData.info();
+        assertNotNull(info);
+        assertTrue(info.containsKey("wid"));
+        assertTrue(info.containsKey("sno"));
+        assertTrue(info.containsKey("t"));
     }
 
 }
