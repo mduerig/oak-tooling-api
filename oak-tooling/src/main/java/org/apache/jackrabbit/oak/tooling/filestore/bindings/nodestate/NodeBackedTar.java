@@ -42,11 +42,6 @@ public class NodeBackedTar implements Tar {
                 .orElseThrow(RuntimeException::new);
     }
 
-    @Override
-    public long timestamp() {
-        return 0; // michid implement timestamp
-    }
-
     @Nonnull
     @Override
     public Iterable<Segment> segments() {

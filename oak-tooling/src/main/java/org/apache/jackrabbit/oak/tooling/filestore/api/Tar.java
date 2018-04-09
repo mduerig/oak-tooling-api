@@ -38,11 +38,6 @@ public interface Tar {
     long size();
 
     /**
-     * @return  creation time of the tar file
-     */
-    long timestamp();
-
-    /**
      * @return  the segments contained in this tar file in reverse chronological order.
      */
     @Nonnull

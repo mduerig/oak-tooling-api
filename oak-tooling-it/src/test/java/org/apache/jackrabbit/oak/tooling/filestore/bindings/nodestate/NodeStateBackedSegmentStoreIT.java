@@ -95,9 +95,6 @@ public class NodeStateBackedSegmentStoreIT {
 
         limit(tars, 20).forEach(tar -> {
             assertTrue(tar.name().startsWith("data"));
-            // michid implement timestamp
-            // long tenYearsAgo = currentTimeMillis() - MILLISECONDS.convert(3650, DAYS);
-            // assertTrue(tar.timestamp() > tenYearsAgo);
             assertTrue(tar.size() > 0);
             assertTrue(tar.segments().iterator().hasNext());
         });
