@@ -20,6 +20,7 @@ package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.limit;
+import static java.util.Arrays.asList;
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
@@ -40,6 +41,7 @@ import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
 import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
+import org.apache.jackrabbit.oak.tooling.filestore.api.Record;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentMetaData;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
@@ -128,6 +130,15 @@ public class NodeStateBackedSegmentStoreIT {
         assertTrue(info.containsKey("wid"));
         assertTrue(info.containsKey("sno"));
         assertTrue(info.containsKey("t"));
+
+        Iterable<Record> records = segment.records();
+        assertTrue(records.iterator().hasNext());
+        Record record = records.iterator().next();
+        // michid implement segmentId
+        // assertEquals(segment.id(), record.segmentId());
+        assertTrue(record.number() >= 0);
+        assertTrue(record.offset() >= 0);
+        assertTrue(asList(Record.Type.values()).contains(record.type()));
 
         for (Segment cne : segment.references()) {
             System.out.println(cne);

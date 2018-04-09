@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -83,7 +82,10 @@ public class NodeStateBackedSegment implements Segment {
     @Nonnull
     @Override
     public Iterable<Record> records() {
-        return Collections.emptyList(); // michid implement records
+        return () -> asStream(node.getChildNode("records").getChildNodeEntries())
+                .map(ChildNodeEntry::getNodeState)
+                .map(NodeStateBackedRecord::newRecord)
+                .iterator();
     }
 
     @Override
