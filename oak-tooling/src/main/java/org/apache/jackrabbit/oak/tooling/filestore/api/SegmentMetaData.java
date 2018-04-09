@@ -20,6 +20,8 @@ package org.apache.jackrabbit.oak.tooling.filestore.api;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 /**
  * An instance of this class represent some metadata associated
  * with a segment.
@@ -49,5 +51,6 @@ public interface SegmentMetaData {
     /**
      * @return  a map representation of the segment info
      */
+    @Nonnull
     Map<String, String> info();
 }

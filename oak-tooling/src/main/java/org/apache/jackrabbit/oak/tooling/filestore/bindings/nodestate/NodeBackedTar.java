@@ -1,10 +1,11 @@
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
+import static org.apache.jackrabbit.oak.api.Type.LONG;
+
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
-import org.apache.jackrabbit.oak.api.Type;
 import org.apache.jackrabbit.oak.spi.state.ChildNodeEntry;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
@@ -37,7 +38,7 @@ public class NodeBackedTar implements Tar {
     @Override
     public long size() {
         return Optional.ofNullable(node.getProperty("size"))
-                .map(property -> property.getValue(Type.LONG))
+                .map(property -> property.getValue(LONG))
                 .orElseThrow(RuntimeException::new);
     }
 
@@ -57,7 +58,6 @@ public class NodeBackedTar implements Tar {
 
     @Override
     public String toString() {
-        // michid implement toString
         return node.toString();
     }
 }

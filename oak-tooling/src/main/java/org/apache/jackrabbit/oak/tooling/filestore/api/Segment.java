@@ -22,6 +22,8 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import org.apache.jackrabbit.oak.api.Blob;
+
 /**
  * An instance of this interface represents a segment of the
  * segment store.
@@ -47,9 +49,14 @@ public interface Segment {
     UUID id();
 
     /**
+     * @return  the segment format version of this segment
+     */
+    int version();
+
+    /**
      * @return  the size of this segment in bytes.
      */
-    int size();
+    long length();
 
     /**
      * @return  the type of this segment
@@ -68,6 +75,12 @@ public interface Segment {
      */
     @Nonnull
     Iterable<Record> records();
+
+    /**
+     * @return  a blob representing the raw data of this segment
+     */
+    @Nonnull
+    Blob data();
 
     /**
      * @return  the meta data associated with this segment.

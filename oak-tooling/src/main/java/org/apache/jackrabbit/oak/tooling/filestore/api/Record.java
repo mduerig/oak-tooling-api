@@ -153,6 +153,16 @@ public interface Record {
     int offset();
 
     /**
+     * @return  the logical number of this record inside its segment
+     */
+    int number();
+
+    /**
+     * @return  the physical address of this record within its segment
+     */
+    int address();
+
+    /**
      * @return  the type of this record
      */
     @Nonnull

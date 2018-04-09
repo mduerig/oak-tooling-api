@@ -25,7 +25,6 @@ import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreB
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
 import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
@@ -36,7 +35,6 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -73,6 +71,7 @@ public class NodeStateBackedSegmentStoreIT {
         limit(ss.tars(), 20).forEach(System.out::println);
         Tar t = get(ss.tars(), 0);
         System.out.println(t.name());
+        System.out.println(t.timestamp());
         System.out.println(t.size());
 
         fs.close();
@@ -91,7 +90,6 @@ public class NodeStateBackedSegmentStoreIT {
     }
 
     @Test
-    @Ignore("WIP")
     public void getSegmentTest() throws IOException, InvalidFileStoreVersionException {
         FileStoreBuilder fsb = fileStoreBuilder(new File("/Users/mduerig/Repositories/adobe.com/publish/segmentstore"));
         ReadOnlyFileStore fs = fsb.buildReadOnly();
@@ -102,8 +100,15 @@ public class NodeStateBackedSegmentStoreIT {
         Tar t = get(ss.tars(), 2);
         Segment s = get(t.segments(), 3);
 
-        Optional<Segment> s2 = ss.segment(s.id());
-        System.out.println(s2);
+        System.out.println(s);
+        System.out.println(s.id());
+        System.out.println(s.version());
+        System.out.println(s.length());
+        System.out.println(s.type());
+        System.out.println(s.references());
+        System.out.println(s.records());
+        System.out.println(s.data().length());
+        System.out.println(s.hexDump(true));
 
         fs.close();
     }
