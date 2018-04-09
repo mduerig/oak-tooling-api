@@ -100,15 +100,14 @@ public class NodeStateBackedSegmentStoreIT {
         Tar t = get(ss.tars(), 2);
         Segment s = get(t.segments(), 3);
 
+        System.out.println(s.hexDump(true));
         System.out.println(s);
         System.out.println(s.id());
-        System.out.println(s.version());
         System.out.println(s.length());
         System.out.println(s.type());
         System.out.println(s.references());
         System.out.println(s.records());
         System.out.println(s.data().length());
-        System.out.println(s.hexDump(true));
 
         fs.close();
     }

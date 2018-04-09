@@ -47,11 +47,6 @@ public class NodeStateBackedSegment implements Segment {
     }
 
     @Override
-    public int version() {
-        return 0; // michid implement version
-    }
-
-    @Override
     public long length() {
         return Optional.ofNullable(node.getProperty("length"))
                 .map(property -> property.getValue(LONG))
@@ -97,7 +92,7 @@ public class NodeStateBackedSegment implements Segment {
         try (PrintWriter writer = new PrintWriter(string)) {
             if (includeHeader) {
                 writer.format("Segment %s (%d bytes)%n", id(), length());
-                writer.format("Version: %d", version());
+                writer.format("Version: %d", metaData().version());
                 writer.format("GC: (generation=%d, full generation=%d, compacted=%b)",
                               metaData().generation(), metaData().fullGeneration(), metaData().compacted());
                 writer.format("Info: (%s)", Joiner.on(',').withKeyValueSeparator("=").join(metaData().info()));

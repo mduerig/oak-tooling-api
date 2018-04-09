@@ -49,11 +49,6 @@ public interface Segment {
     UUID id();
 
     /**
-     * @return  the segment format version of this segment
-     */
-    int version();
-
-    /**
      * @return  the size of this segment in bytes.
      */
     long length();
