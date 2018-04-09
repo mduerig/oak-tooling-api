@@ -2,6 +2,7 @@ package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
 import static org.apache.jackrabbit.oak.api.Type.BINARY;
 import static org.apache.jackrabbit.oak.api.Type.LONG;
+import static org.apache.jackrabbit.oak.api.Type.STRING;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,10 @@ public class NodeStateBackedSegment implements Segment {
     @Nonnull
     @Override
     public UUID id() {
-        return new UUID(0, 0); // michid implement id
+        return Optional.ofNullable(node.getProperty("id"))
+                .map(property -> property.getValue(STRING))
+                .map(UUID::fromString)
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
@@ -92,10 +96,10 @@ public class NodeStateBackedSegment implements Segment {
         try (PrintWriter writer = new PrintWriter(string)) {
             if (includeHeader) {
                 writer.format("Segment %s (%d bytes)%n", id(), length());
-                writer.format("Version: %d", metaData().version());
-                writer.format("GC: (generation=%d, full generation=%d, compacted=%b)",
+                writer.format("Version: %d%n", metaData().version());
+                writer.format("GC: (generation=%d, full generation=%d, compacted=%b)%n",
                               metaData().generation(), metaData().fullGeneration(), metaData().compacted());
-                writer.format("Info: (%s)", Joiner.on(',').withKeyValueSeparator("=").join(metaData().info()));
+                writer.format("Info: (%s)%n", Joiner.on(',').withKeyValueSeparator("=").join(metaData().info()));
 
                 if (type() == Type.DATA) {
                     writer.println("--------------------------------------------------------------------------");
