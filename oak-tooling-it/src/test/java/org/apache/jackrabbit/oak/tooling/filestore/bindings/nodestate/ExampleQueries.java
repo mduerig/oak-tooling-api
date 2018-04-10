@@ -19,6 +19,7 @@
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
 import static org.junit.Assume.assumeTrue;
@@ -35,7 +36,6 @@ import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
-import org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
 import org.junit.After;
@@ -87,7 +87,7 @@ public class ExampleQueries {
     public void segmentSize() {
         long segmentSizeSum = asStream(segmentStore.tars())
                 .filter(tar -> tar.name().endsWith("tar"))
-                .flatMap(tar -> asStream(tar.segments()))
+                .flatMap(asStream(Tar::segments))
                 .mapToLong(Segment::length)
                 .sum();
 
@@ -98,9 +98,9 @@ public class ExampleQueries {
     public void referenceCount() {
         long referenceCount = asStream(segmentStore.tars())
                 .filter(tar -> tar.name().endsWith("tar"))
-                .flatMap(tar -> asStream(tar.segments()))
-                .filter(s -> s.type() == Type.DATA)
-                .flatMap(segment -> asStream(segment.references()))
+                .flatMap(asStream(Tar::segments))
+                .filter(Segment.isOfType(DATA))
+                .flatMap(asStream(Segment::references))
                 .count();
 
         System.out.println(referenceCount);

@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.limit;
 import static java.util.Arrays.asList;
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.NODE;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
@@ -44,6 +45,7 @@ import org.apache.jackrabbit.oak.segment.file.proc.Proc;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Record;
+import org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentMetaData;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
@@ -108,8 +110,8 @@ public class NodeStateBackedSegmentStoreIT {
     @Test
     public void segmentsTest() {
         Segment segment = asStream(segmentStore.tars())
-                .flatMap(tar -> asStream(tar.segments()))
-                .filter(s -> s.type() == DATA)
+                .flatMap(asStream(Tar::segments))
+                .filter(Segment.isOfType(DATA))
                 .findFirst()
                 .orElseThrow(() ->
                      new AssumptionViolatedException("Cannot run with empty segment store"));
@@ -140,10 +142,10 @@ public class NodeStateBackedSegmentStoreIT {
         assertEquals(segment.id(), record.segmentId());
         assertTrue(record.number() >= 0);
         assertTrue(record.offset() >= 0);
-        assertTrue(asList(Record.Type.values()).contains(record.type()));
+        assertTrue(asList(Type.values()).contains(record.type()));
 
         Optional<NodeState> nodeFromRecord = asStream(records)
-                .filter(r -> r.type() == Record.Type.NODE)
+                .filter(Record.isOfType(NODE))
                 .findFirst()
                 .flatMap(Record::root);
 
@@ -154,9 +156,9 @@ public class NodeStateBackedSegmentStoreIT {
     @Test
     public void segmentReferencesTest() {
         Segment segment = asStream(segmentStore.tars())
-                .flatMap(tar -> asStream(tar.segments()))
-                .filter(s -> s.type() == DATA)
-                .flatMap(s -> asStream(s.references()))
+                .flatMap(asStream(Tar::segments))
+                .filter(Segment.isOfType(DATA))
+                .flatMap(asStream(Segment::references))
                 .filter(Segment::exists)
                 .findFirst()
                 .orElseThrow(() ->

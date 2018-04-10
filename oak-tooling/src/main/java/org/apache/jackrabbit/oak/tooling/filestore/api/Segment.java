@@ -19,6 +19,7 @@
 package org.apache.jackrabbit.oak.tooling.filestore.api;
 
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
@@ -96,4 +97,14 @@ public interface Segment {
      */
     @Nonnull
     String hexDump(boolean includeHeader);
+
+    /**
+     * @param type  the {@link Type} to match the segments on
+     * @return  a {@code Segment} predicate which is {@code true} for all segments
+     *          with {@code Segment#type() == type}
+     */
+    @Nonnull
+    static Predicate<Segment> isOfType(@Nonnull Type type) {
+        return segment -> segment.type() == type;
+    }
 }

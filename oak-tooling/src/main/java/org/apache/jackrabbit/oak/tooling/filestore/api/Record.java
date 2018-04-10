@@ -20,6 +20,7 @@ package org.apache.jackrabbit.oak.tooling.filestore.api;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
@@ -175,4 +176,15 @@ public interface Record {
      * @return  the root node associated with records of type {@link Record.Type#NODE}
      */
     Optional<NodeState> root();
+
+    /**
+     * @param type  the {@link Type} to match the records on
+     * @return  a {@code Record} predicate which is {@code true} for all records
+     *          with {@code Record#type() == type}
+     */
+    @Nonnull
+    static Predicate<Record> isOfType(@Nonnull Type type) {
+        return record -> record.type() == type;
+    }
+
 }
