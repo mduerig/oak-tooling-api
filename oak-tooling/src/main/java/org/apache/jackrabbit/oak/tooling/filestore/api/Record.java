@@ -18,9 +18,12 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.api;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+
+import org.apache.jackrabbit.oak.spi.state.NodeState;
 
 /**
  * An instance of this class represents a record in segment
@@ -167,4 +170,9 @@ public interface Record {
      */
     @Nonnull
     Type type();
+
+    /**
+     * @return  the root node associated with records of type {@link Record.Type#NODE}
+     */
+    Optional<NodeState> root();
 }

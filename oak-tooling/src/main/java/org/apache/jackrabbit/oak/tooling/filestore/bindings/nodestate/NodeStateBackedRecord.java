@@ -76,6 +76,13 @@ public class NodeStateBackedRecord implements Record {
     }
 
     @Override
+    public Optional<NodeState> root() {
+        return node.hasChildNode("root")
+            ? Optional.of(node.getChildNode("root"))
+            : Optional.empty();
+    }
+
+    @Override
     public String toString() {
         return node.toString();
     }

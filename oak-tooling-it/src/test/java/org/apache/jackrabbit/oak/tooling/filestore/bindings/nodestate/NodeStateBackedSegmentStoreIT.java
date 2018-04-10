@@ -35,11 +35,13 @@ import static org.junit.Assume.assumeTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
 import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
 import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
+import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Record;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
@@ -139,6 +141,14 @@ public class NodeStateBackedSegmentStoreIT {
         assertTrue(record.number() >= 0);
         assertTrue(record.offset() >= 0);
         assertTrue(asList(Record.Type.values()).contains(record.type()));
+
+        Optional<NodeState> nodeFromRecord = asStream(records)
+                .filter(r -> r.type() == Record.Type.NODE)
+                .findFirst()
+                .flatMap(Record::root);
+
+        assertTrue(nodeFromRecord.isPresent());
+        assertTrue(nodeFromRecord.get().exists());
     }
 
     @Test
