@@ -19,6 +19,7 @@
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.NODE;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
@@ -27,6 +28,7 @@ import static org.junit.Assume.assumeTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,7 +36,9 @@ import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
 import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
 import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
+import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
+import org.apache.jackrabbit.oak.tooling.filestore.api.Record;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
@@ -116,6 +120,19 @@ public class ExampleQueries {
                 .limit(100)
                 .collect(Collectors.toList());
         System.out.println(latest100Checkpoints);
+    }
+
+    @Test
+    public void nodesInRecords() {
+        Stream<NodeState> nodes = asStream(segmentStore.tars())
+                .flatMap(asStream(Tar::segments))
+                .flatMap(asStream(Segment::records))
+                .filter(Record.isOfType(NODE))
+                .limit(10)
+                .map(Record::root)
+                .map(Optional::get);
+
+        nodes.forEach(System.out::println);
     }
 
 }
