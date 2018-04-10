@@ -116,7 +116,11 @@ public class NodeStateBackedSegment implements Segment {
     @Nonnull
     @Override
     public SegmentMetaData metaData() {
-        return new NodeBackedSegmentMetaData(node);
+        if (type() == DATA) {
+            return new NodeBackedSegmentMetaData(node);
+        } else {
+            throw new IllegalStateException("Not a data segment");
+        }
     }
 
     @Nonnull

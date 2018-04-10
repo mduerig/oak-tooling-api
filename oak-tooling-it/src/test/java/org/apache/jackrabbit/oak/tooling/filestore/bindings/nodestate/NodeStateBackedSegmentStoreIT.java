@@ -23,10 +23,12 @@ import static com.google.common.collect.Iterables.limit;
 import static java.util.Arrays.asList;
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.NODE;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.BULK;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -171,6 +173,26 @@ public class NodeStateBackedSegmentStoreIT {
         assertEquals(segment.length(), segment.data().length());
         assertTrue(segment.exists());
         assertTrue(segment.hexDump(true).contains(" 0aK"));
+    }
+
+    @Test
+    public void bulkSegmentTest() {
+        Segment bulkSegment = asStream(segmentStore.tars())
+                .flatMap(asStream(Tar::segments))
+                .filter(Segment.isOfType(BULK))
+                .findFirst()
+                .orElseThrow(() ->
+                    new AssumptionViolatedException("No bulk segment found"));
+
+        assertNotNull(bulkSegment.toString());
+        assertTrue(bulkSegment.exists());
+        assertEquals(BULK, bulkSegment.type());
+        assertNotNull(bulkSegment.id());
+        assertTrue(bulkSegment.length() > 0);
+        assertFalse(bulkSegment.records().iterator().hasNext());
+        assertFalse(bulkSegment.references().iterator().hasNext());
+        assertTrue(bulkSegment.hexDump(false).startsWith("00000000"));
+        assertTrue(bulkSegment.hexDump(true).startsWith("Segment"));
     }
 
 }
