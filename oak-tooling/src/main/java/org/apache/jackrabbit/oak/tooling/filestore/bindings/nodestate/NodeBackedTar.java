@@ -12,7 +12,15 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
 
 /**
- * michid document
+ * An implementation of {@link Tar} based on a {@link NodeState}.
+ * The node state is expected to expose the following properties:
+ * <ul>
+ *     <li>{@code name} of type {@code STRING}</li>
+ *     <li>{@code size} of type {@code LONG}</li>
+ * </ul>
+ * The node state is expected to expose a child node for each segment
+ * contained in the corresponding tar file. Those child nodes are
+ * expected to correspond to the structure required by {@link NodeStateBackedSegment}.
  */
 public class NodeBackedTar implements Tar {
 

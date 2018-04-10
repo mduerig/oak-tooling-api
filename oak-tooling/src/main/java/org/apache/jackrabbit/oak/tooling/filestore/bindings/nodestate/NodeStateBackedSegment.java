@@ -29,7 +29,17 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentMetaData;
 
 /**
- * michid document
+ * An implementation of {@link Segment} based on a {@link NodeState}.
+ * The node state is expected to expose the following properties:
+ * <ul>
+ *     <li>{@code id} of type {@code STRING}</li>
+ *     <li>{@code exists} of type {@code BOOLEAN}</li>
+ *     <li>{@code length} of type {@code LONG}</li>
+ *     <li>{@code isDataSegment} of type {@code BOOLEAN}</li>
+ *     <li>{@code data} of type {@code BINARY}</li>
+ * </ul>
+ * The node state is expected to expose a child node {@code references}
+ * and a child node {@code records}.
  */
 public class NodeStateBackedSegment implements Segment {
 

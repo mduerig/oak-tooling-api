@@ -16,7 +16,15 @@ import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentMetaData;
 
 /**
- * michid document
+ * An implementation of {@link SegmentMetaData} based on a {@link NodeState}.
+ * The node state is expected to expose the following properties:
+ * <ul>
+ *     <li>{@code version} of type {@code LONG}</li>
+ *     <li>{@code generation} of type {@code LONG}</li>
+ *     <li>{@code fullGeneration} of type {@code LONG}</li>
+ *     <li>{@code compacted} of type {@code BOOLEAN}</li>
+ *     <li>{@code info} of type {@code STRING}</li>
+ * </ul>
  */
 public class NodeBackedSegmentMetaData implements SegmentMetaData {
     @Nonnull

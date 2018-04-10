@@ -32,7 +32,15 @@ import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 
 /**
- * michid document
+ * An implementation of {@link JournalEntry} based on a {@link NodeState}.
+ * The node state is expected to expose the following properties:
+ * <ul>
+ *     <li>{@code timestamp} of type {@code LONG}</li>
+ *     <li>{@code segmentId} of type {@code STRING}</li>
+ *     <li>{@code offset} of type {@code LONG}</li>
+ * </ul>
+ * The node state is expected to expose a child node {@code root} corresponding
+ * with this journal entry.
  */
 public class NodeStateBackedJournalEntry implements JournalEntry {
     @Nonnull

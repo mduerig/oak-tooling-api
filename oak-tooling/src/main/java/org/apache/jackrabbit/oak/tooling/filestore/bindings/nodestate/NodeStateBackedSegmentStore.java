@@ -34,7 +34,9 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
 
 /**
- * michid document
+ * An implementation of {@link SegmentStore} based on a {@link NodeState}.
+ * The node state is expected to expose a child node {@code store}
+ * and a child node {@code journal}.
  */
 public class NodeStateBackedSegmentStore implements SegmentStore {
 

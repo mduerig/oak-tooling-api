@@ -12,7 +12,15 @@ import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Record;
 
 /**
- * michid document
+ * An implementation of {@link Record} based on a {@link NodeState}.
+ * The node state is expected to expose the following properties:
+ * <ul>
+ *     <li>{@code segmentId} of type {@code STRING}</li>
+ *     <li>{@code offset} of type {@code LONG}</li>
+ *     <li>{@code number} of type {@code LONG}</li>
+ *     <li>{@code address} of type {@code LONG}</li>
+ *     <li>{@code type} of type {@code STRING}</li>
+ * </ul>
  */
 public class NodeStateBackedRecord implements Record {
 
