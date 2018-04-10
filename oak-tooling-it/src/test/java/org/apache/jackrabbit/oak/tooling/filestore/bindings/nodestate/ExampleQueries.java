@@ -25,11 +25,15 @@ import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
 import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
 import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
+import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
@@ -98,6 +102,18 @@ public class ExampleQueries {
                 .count();
 
         System.out.println(referenceCount);
+    }
+
+    @Test
+    public void checkpointCountPerRevision() {
+        Stream<Long> checkpointCountPerRevision = asStream(segmentStore.journalEntries())
+                .map(JournalEntry::getRoot)
+                .map(n -> n.getChildNode("checkpoints").getChildNodeCount(Integer.MAX_VALUE));
+
+        List<Long> latest100Checkpoints = checkpointCountPerRevision
+                .limit(100)
+                .collect(Collectors.toList());
+        System.out.println(latest100Checkpoints);
     }
 
 }
