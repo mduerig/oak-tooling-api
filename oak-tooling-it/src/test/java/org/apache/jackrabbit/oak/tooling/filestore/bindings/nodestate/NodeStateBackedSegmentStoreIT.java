@@ -136,10 +136,26 @@ public class NodeStateBackedSegmentStoreIT {
         assertTrue(record.number() >= 0);
         assertTrue(record.offset() >= 0);
         assertTrue(asList(Record.Type.values()).contains(record.type()));
+    }
 
-        for (Segment cne : segment.references()) {
-            System.out.println(cne);
-        }
+    @Test
+    public void segmentReferencesTest() {
+        Segment segment = asStream(segmentStore.tars())
+                .flatMap(tar -> asStream(tar.segments()))
+                .filter(s -> s.type() == DATA)
+                .flatMap(s -> asStream(s.references()))
+                .filter(Segment::exists)
+                .findFirst()
+                .orElseThrow(() ->
+                    new AssumptionViolatedException("No existing references found"));
+
+        assertNotNull(segment.id());
+        assertTrue(segment.length() > 0);
+        assertSame(segment.type(), DATA);
+        assertNotNull(segment.data());
+        assertEquals(segment.length(), segment.data().length());
+        assertTrue(segment.exists());
+        assertTrue(segment.hexDump(true).contains(" 0aK"));
     }
 
 }
