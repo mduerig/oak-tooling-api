@@ -73,4 +73,9 @@ public class NodeBackedSegmentMetaData implements SegmentMetaData {
         Type type = new TypeToken<Map<String, String>>() {}.getType();
         return new Gson().fromJson(keyValuePairs, type);
     }
+
+    @Override
+    public String toString() {
+        return node.toString();
+    }
 }
