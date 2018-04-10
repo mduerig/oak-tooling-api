@@ -35,6 +35,7 @@ import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
 import org.apache.jackrabbit.oak.segment.file.proc.Proc;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
+import org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
 import org.junit.After;
@@ -98,6 +99,7 @@ public class ExampleQueries {
         long referenceCount = asStream(segmentStore.tars())
                 .filter(tar -> tar.name().endsWith("tar"))
                 .flatMap(tar -> asStream(tar.segments()))
+                .filter(s -> s.type() == Type.DATA)
                 .flatMap(segment -> asStream(segment.references()))
                 .count();
 
