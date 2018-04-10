@@ -126,12 +126,11 @@ public class NodeStateBackedSegment implements Segment {
         try (PrintWriter writer = new PrintWriter(string)) {
             if (includeHeader) {
                 writer.format("Segment %s (%d bytes)%n", id(), length());
-                writer.format("Version: %d%n", metaData().version());
-                writer.format("GC: (generation=%d, full generation=%d, compacted=%b)%n",
-                              metaData().generation(), metaData().fullGeneration(), metaData().compacted());
-                writer.format("Info: (%s)%n", Joiner.on(',').withKeyValueSeparator("=").join(metaData().info()));
-
                 if (type() == DATA) {
+                    writer.format("Version: %d%n", metaData().version());
+                    writer.format("GC: (generation=%d, full generation=%d, compacted=%b)%n",
+                                  metaData().generation(), metaData().fullGeneration(), metaData().compacted());
+                    writer.format("Info: (%s)%n", Joiner.on(',').withKeyValueSeparator("=").join(metaData().info()));
                     writer.println("--------------------------------------------------------------------------");
                     int i = 1;
                     for (Segment segment : references()) {
