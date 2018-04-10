@@ -55,6 +55,13 @@ public class NodeStateBackedSegment implements Segment {
     }
 
     @Override
+    public boolean exists() {
+        return Optional.ofNullable(node.getProperty("exists"))
+                .map(property -> property.getValue(BOOLEAN))
+                .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
     public long length() {
         return Optional.ofNullable(node.getProperty("length"))
                 .map(property -> property.getValue(LONG))

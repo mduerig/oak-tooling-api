@@ -28,7 +28,7 @@ import org.apache.jackrabbit.oak.api.Blob;
  * An instance of this interface represents a segment of the
  * segment store.
  */
-public interface Segment {  // michid deal with non present segments
+public interface Segment {
 
     /**
      * Type of the segment.
@@ -47,6 +47,11 @@ public interface Segment {  // michid deal with non present segments
      */
     @Nonnull
     UUID id();
+
+    /**
+     * @return  {@code true} iff the segment is present in the store
+     */
+    boolean exists();
 
     /**
      * @return  the size of this segment in bytes.

@@ -114,6 +114,7 @@ public class NodeStateBackedSegmentStoreIT {
         assertSame(segment.type(), DATA);
         assertNotNull(segment.data());
         assertEquals(segment.length(), segment.data().length());
+        assertTrue(segment.exists());
         assertTrue(segment.hexDump(true).contains(" 0aK"));
 
         SegmentMetaData metaData = segment.metaData();
