@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.limit;
 import static java.util.Arrays.asList;
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.NODE;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.VALUE;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.BULK;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
@@ -153,6 +154,13 @@ public class NodeStateBackedSegmentStoreIT {
 
         assertTrue(nodeFromRecord.isPresent());
         assertTrue(nodeFromRecord.get().exists());
+
+        Optional<String> stringFromRecord = asStream(records)
+                .filter(Record.isOfType(VALUE))
+                .findFirst()
+                .flatMap(Record::value);
+
+        assertTrue(stringFromRecord.isPresent());
     }
 
     @Test

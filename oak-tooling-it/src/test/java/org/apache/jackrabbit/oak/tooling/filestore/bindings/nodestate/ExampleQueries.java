@@ -20,6 +20,7 @@ package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
 import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.NODE;
+import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.VALUE;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
@@ -130,6 +131,19 @@ public class ExampleQueries {
                 .filter(Record.isOfType(NODE))
                 .limit(10)
                 .map(Record::root)
+                .map(Optional::get);
+
+        nodes.forEach(System.out::println);
+    }
+
+    @Test
+    public void stringsInRecords() {
+        Stream<String> nodes = asStream(segmentStore.tars())
+                .flatMap(asStream(Tar::segments))
+                .flatMap(asStream(Segment::records))
+                .filter(Record.isOfType(VALUE))
+                .limit(100)
+                .map(Record::value)
                 .map(Optional::get);
 
         nodes.forEach(System.out::println);
