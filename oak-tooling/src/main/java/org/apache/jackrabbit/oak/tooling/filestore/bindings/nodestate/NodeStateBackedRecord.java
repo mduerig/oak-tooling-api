@@ -83,12 +83,6 @@ public class NodeStateBackedRecord implements Record {
     }
 
     @Override
-    public Optional<String> value() {
-        return Optional.ofNullable(node.getProperty("value"))
-                .map(property -> property.getValue(STRING));
-    }
-
-    @Override
     public String toString() {
         return node.toString();
     }

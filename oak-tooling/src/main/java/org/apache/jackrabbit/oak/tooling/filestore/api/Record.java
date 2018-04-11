@@ -178,11 +178,6 @@ public interface Record {
     Optional<NodeState> root();
 
     /**
-     * @return  the string value associated with records of type {@link Record.Type#VALUE}
-     */
-    Optional<String> value();
-
-    /**
      * @param type  the {@link Type} to match the records on
      * @return  a {@code Record} predicate which is {@code true} for all records
      *          with {@code Record#type() == type}
