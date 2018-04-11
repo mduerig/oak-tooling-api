@@ -108,12 +108,9 @@ public class NodeStateBackedSegmentStoreIT {
         assumeFalse("Cannot run with empty segment store", isEmpty(tars));
 
         tars.forEach(tar -> {
-            // michid FIXME OAK-7398 Only tars should be returned here
-            if (tar.name().startsWith("data")) {
-                assertTrue(tar.name().startsWith("data"));
-                assertTrue(tar.size() > 0);
-                assertTrue(tar.segments().iterator().hasNext());
-            }
+            assertTrue(tar.name().startsWith("data"));
+            assertTrue(tar.size() > 0);
+            assertTrue(tar.segments().iterator().hasNext());
         });
     }
 
