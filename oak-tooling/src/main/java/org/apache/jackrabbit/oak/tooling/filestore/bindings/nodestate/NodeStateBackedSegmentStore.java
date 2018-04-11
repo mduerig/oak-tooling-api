@@ -22,6 +22,7 @@ import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Str
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
 import org.apache.jackrabbit.oak.spi.state.ChildNodeEntry;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.tooling.filestore.api.JournalEntry;
+import org.apache.jackrabbit.oak.tooling.filestore.api.Record;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
@@ -70,6 +72,27 @@ public class NodeStateBackedSegmentStore implements SegmentStore {
                 .flatMap(NodeStateBackedSegmentStore::getSegments)
                 .filter(segment -> id.equals(segment.id()))
                 .findFirst();
+    }
+
+    @Nonnull
+    @Override
+    public Optional<NodeState> head() {
+        return asStream(journalEntries())
+                .findFirst()
+                .map(JournalEntry::getRoot);
+    }
+
+    @Nonnull
+    @Override
+    public Optional<NodeState> node(@Nonnull UUID segmentId, int recordNumber) {
+        return segment(segmentId)
+                .flatMap(getNode(recordNumber));
+    }
+
+    @Nonnull
+    private Function<Segment, Optional<NodeState>> getNode(int recordNumber) {
+        return segment -> segment.record(recordNumber)
+                .flatMap(Record::root);
     }
 
     @Nonnull

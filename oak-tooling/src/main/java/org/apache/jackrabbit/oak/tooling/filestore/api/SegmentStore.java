@@ -23,6 +23,8 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import org.apache.jackrabbit.oak.spi.state.NodeState;
+
 /**
  * An instances of this interface serves as main entry point to the
  * Oak Tooling API. It provides means to access and examine the
@@ -45,6 +47,22 @@ public interface SegmentStore {
      */
     @Nonnull
     Optional<Segment> segment(@Nonnull UUID id);
+
+    /**
+     * Retrieve the root node of the head state of this segment store.
+     * @return  a node state if the store is none empty
+     */
+    @Nonnull
+    Optional<NodeState> head();
+
+    /**
+     * Retrieve a node state
+     * @param segmentId  segment id of the node state
+     * @param recordNumber     record recordNumber of the node state
+     * @return  the node state identified by {@code segmentId} and {@code recordNumber} if it exists.
+     */
+    @Nonnull
+    Optional<NodeState> node(@Nonnull UUID segmentId, int recordNumber);
 
     /**
      * @return The entries in the {@code journal.log} in

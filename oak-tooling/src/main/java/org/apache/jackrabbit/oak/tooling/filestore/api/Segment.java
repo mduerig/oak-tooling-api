@@ -18,6 +18,7 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.api;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -76,6 +77,13 @@ public interface Segment {
      */
     @Nonnull
     Iterable<Record> records();
+
+    /**
+     * @param recordNumber   record recordNumber
+     * @return  the record with the given {@code recordNumber} if it exists in the segment.
+     */
+    @Nonnull
+    Optional<Record> record(int recordNumber);
 
     /**
      * @return  a blob representing the raw data of this segment

@@ -105,6 +105,20 @@ public class NodeStateBackedSegment implements Segment {
                 .iterator();
     }
 
+    @Nonnull
+    @Override
+    public Optional<Record> record(int recordNumber) {
+        NodeState record = node
+                .getChildNode("records")
+                .getChildNode(String.valueOf(recordNumber));
+
+        if (record.exists()) {
+            return Optional.of(NodeStateBackedRecord.newRecord(record));
+        } else {
+            return Optional.empty();
+        }
+    }
+
     @Override
     @Nonnull
     public Blob data() {

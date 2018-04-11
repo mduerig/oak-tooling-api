@@ -83,6 +83,12 @@ public class NodeStateBackedSegmentStoreIT {
     }
 
     @Test
+    public void rootTest() {
+        Optional<NodeState> head = segmentStore.head();
+        assertEquals(Optional.of(fileStore.getHead()), head);
+    }
+
+    @Test
     public void journalTest() {
         Iterable<JournalEntry> journal = segmentStore.journalEntries();
         assumeFalse("Cannot run with empty journal", isEmpty(journal));
@@ -92,6 +98,8 @@ public class NodeStateBackedSegmentStoreIT {
             assertNotNull(entry.segmentId());
             assertTrue(entry.offset() >= 0);
         });
+
+        assertEquals(fileStore.getHead(), journal.iterator().next().getRoot());
     }
 
     @Test
@@ -193,6 +201,16 @@ public class NodeStateBackedSegmentStoreIT {
         assertFalse(bulkSegment.references().iterator().hasNext());
         assertTrue(bulkSegment.hexDump(false).startsWith("00000000"));
         assertTrue(bulkSegment.hexDump(true).startsWith("Segment"));
+    }
+
+    @Test
+    public void resolveNodeTest() {
+        asStream(segmentStore.journalEntries())
+            .limit(10)
+            .forEach(entry ->
+                 assertEquals(
+                     Optional.of(entry.getRoot()),
+                     segmentStore.node(entry.segmentId(), entry.offset())));
     }
 
 }
