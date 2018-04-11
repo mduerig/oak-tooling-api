@@ -18,20 +18,20 @@
 
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
-import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.NODE;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.NodeStateBackedSegmentStore.newSegmentStore;
 import static org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate.Streams.asStream;
-import static org.junit.Assume.assumeTrue;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.microsoft.azure.storage.StorageException;
 import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
 import org.apache.jackrabbit.oak.segment.file.InvalidFileStoreVersionException;
 import org.apache.jackrabbit.oak.segment.file.ReadOnlyFileStore;
@@ -43,28 +43,26 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ExampleQueries {
-    private final static String SEGMENT_DIR = System.getProperty("segmentstore", null);
 
-    private ReadOnlyFileStore fileStore;
+    private static ReadOnlyFileStore fileStore;
 
-    private SegmentStore segmentStore;
+    private static SegmentStore segmentStore;
 
-    @Before
-    public void setup() throws IOException, InvalidFileStoreVersionException {
-        assumeTrue("No segment store directory specified. " +
-                           "Use -Dsegmentstore=/path/to/segmentstore", SEGMENT_DIR != null);
-
-        FileStoreBuilder builder = fileStoreBuilder(new File(SEGMENT_DIR));
+    @BeforeClass
+    public static void setup() throws IOException, InvalidFileStoreVersionException, URISyntaxException, InvalidKeyException, StorageException {
+        FileStoreBuilder builder = FileStoreUtil.getFileStoreBuilder();
         fileStore = builder.buildReadOnly();
         segmentStore = newSegmentStore(Proc.of(builder.buildProcBackend(fileStore)));
     }
 
-    @After
-    public void tearDown() {
+    @AfterClass
+    public static void tearDown() {
         segmentStore = null;
         if (fileStore != null) {
             fileStore.close();
