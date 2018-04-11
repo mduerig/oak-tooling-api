@@ -17,19 +17,21 @@
  */
 package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 
-import com.microsoft.azure.storage.CloudStorageAccount;
-import com.microsoft.azure.storage.StorageException;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import org.apache.jackrabbit.oak.segment.azure.AzurePersistence;
-import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
+import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 
-import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
-import static org.junit.Assume.assumeTrue;
+import javax.annotation.Nonnull;
+
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import org.apache.jackrabbit.oak.segment.azure.AzurePersistence;
+import org.apache.jackrabbit.oak.segment.file.FileStoreBuilder;
+import org.junit.AssumptionViolatedException;
 
 public final class FileStoreUtil {
 
@@ -44,6 +46,7 @@ public final class FileStoreUtil {
     private FileStoreUtil() {
     }
 
+    @Nonnull
     public static FileStoreBuilder getFileStoreBuilder() throws URISyntaxException, InvalidKeyException, StorageException, IOException {
         if (SEGMENT_DIR != null) {
             return fileStoreBuilder(new File(SEGMENT_DIR));
@@ -53,10 +56,10 @@ public final class FileStoreUtil {
             AzurePersistence azurePersistence = new AzurePersistence(container.getDirectoryReference(AZURE_PATH));
             return FileStoreBuilder.fileStoreBuilder(new File(".")).withCustomPersistence(azurePersistence);
         } else {
-            assumeTrue("No segment store directory specified. " +
+            throw new AssumptionViolatedException(
+                    "No segment store directory specified. " +
                     "Use -Dsegmentstore=/path/to/segmentstore or " +
-                    "configure Azure with azure_conn_string, azure_container and azure_path.", false);
-            return null;
+                    "configure Azure with azure_conn_string, azure_container and azure_path.");
         }
     }
 }

@@ -21,7 +21,6 @@ package org.apache.jackrabbit.oak.tooling.filestore.bindings.nodestate;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.limit;
 import static java.util.Arrays.asList;
-import static org.apache.jackrabbit.oak.segment.file.FileStoreBuilder.fileStoreBuilder;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Record.Type.NODE;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.BULK;
 import static org.apache.jackrabbit.oak.tooling.filestore.api.Segment.Type.DATA;
@@ -33,9 +32,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -55,10 +52,8 @@ import org.apache.jackrabbit.oak.tooling.filestore.api.Segment;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentMetaData;
 import org.apache.jackrabbit.oak.tooling.filestore.api.SegmentStore;
 import org.apache.jackrabbit.oak.tooling.filestore.api.Tar;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.AssumptionViolatedException;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
