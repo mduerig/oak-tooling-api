@@ -69,7 +69,7 @@ public class NodeStateBackedJournalEntry implements JournalEntry {
     }
 
     @Override
-    public int offset() {
+    public int recordNumber() {
         return Optional.ofNullable(node.getString("revision"))
                 .flatMap(RecordId::fromString)
                 .orElseThrow(RuntimeException::new)

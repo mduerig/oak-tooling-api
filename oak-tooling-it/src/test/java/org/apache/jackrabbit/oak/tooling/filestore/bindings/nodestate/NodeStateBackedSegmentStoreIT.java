@@ -96,7 +96,7 @@ public class NodeStateBackedSegmentStoreIT {
         limit(journal, 20).forEach(entry -> {
             assertTrue(entry.getRoot().exists());
             assertNotNull(entry.segmentId());
-            assertTrue(entry.offset() >= 0);
+            assertTrue(entry.recordNumber() >= 0);
         });
 
         assertEquals(fileStore.getHead(), journal.iterator().next().getRoot());
@@ -207,7 +207,7 @@ public class NodeStateBackedSegmentStoreIT {
             .forEach(entry ->
                  assertEquals(
                      Optional.of(entry.getRoot()),
-                     segmentStore.node(entry.segmentId(), entry.offset())));
+                     segmentStore.node(entry.segmentId(), entry.recordNumber())));
     }
 
 }

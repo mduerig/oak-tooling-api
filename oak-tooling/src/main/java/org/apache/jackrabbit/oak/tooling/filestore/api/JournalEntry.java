@@ -42,9 +42,9 @@ public interface JournalEntry {
     UUID segmentId();
 
     /**
-     * @return  the offset of this journal entry in the segment pointed to by {@link #segmentId()}
+     * @return  the record number of this journal entry in the segment pointed to by {@link #segmentId()}
      */
-    int offset();
+    int recordNumber();
 
     /**
      * @return  the root node state of this revision.
