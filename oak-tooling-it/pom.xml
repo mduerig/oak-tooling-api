@@ -35,7 +35,7 @@
   </parent>
 
   <properties>
-    <oak.version>1.9.0</oak.version>
+    <oak.version>1.9.1</oak.version>
   </properties>
 
   <build>
